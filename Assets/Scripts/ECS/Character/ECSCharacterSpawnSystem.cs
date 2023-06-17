@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Jobs;
 using Unity.Collections;
+using Unity.Burst;
 
 public struct ECSCharacterSpawnData
 {
@@ -46,6 +47,7 @@ public partial struct ECSCharacterSpawnSystem : ISystem
         // throw new System.NotImplementedException();
     }
     
+    [BurstCompile]
     private struct SpawnCharacterJob : IJobParallelFor
     {
         public EntityCommandBuffer.ParallelWriter ecbParallelWriter;
@@ -59,6 +61,12 @@ public partial struct ECSCharacterSpawnSystem : ISystem
             ecbParallelWriter.SetComponent(0, entity, spawnCharacterData.transformData);
             ecbParallelWriter.AddComponent(0, entity, typeof(ECSCharacterData));
             ecbParallelWriter.SetComponent(0, entity, spawnCharacterData.characterData);
+            ecbParallelWriter.AddComponent(0, entity, typeof(ECSMoveData));
+            ecbParallelWriter.SetComponent(0, entity, new ECSMoveData()
+            {
+                speed = 1.0f,
+                accel = 1.0f,
+            });
         }
     }
 
