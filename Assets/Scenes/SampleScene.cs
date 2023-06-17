@@ -54,10 +54,16 @@ public class SampleScene : MonoBehaviour
         var query = entityManager.CreateEntityQuery(typeof(ECSCharacterData));
         if (query.IsEmpty == false)
         {
-            var transformList = new List<Transform>();
-            var transformDataList = new List<LocalTransform>();
-            foreach (var entity in query.ToEntityArray(Allocator.Temp))
+            var disableEntityList = new List<Entity>(m_DicObjs.Keys);
+
+            var entities = query.ToEntityArray(Allocator.Temp);
+            var entityCount = entities.Length;
+            
+            var transforms = new Transform[entityCount];
+            var transformDatas = new NativeArray<LocalTransform>(entityCount, Allocator.TempJob);
+            for (int i = 0; i < entityCount; i ++)
             {
+                var entity = entities[i];
                 if (m_DicObjs.ContainsKey(entity) == false)
                 {
                     var characterData = World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentData<ECSCharacterData>(entity);
@@ -68,18 +74,19 @@ public class SampleScene : MonoBehaviour
                 }
                 
                 var transformData = World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentData<LocalTransform>(entity);
+                transforms[i] = m_DicObjs[entity].transform;
+                transformDatas[i] = transformData;
+                disableEntityList.Remove(entity);
+            }
 
-                // m_DicObjs[entity].transform.position = entityTransform.Position;
-                // m_DicObjs[entity].transform.rotation = entityTransform.Rotation;
-                // m_DicObjs[entity].transform.localScale = Vector3.one * entityTransform.Scale;
-                
-                transformList.Add(m_DicObjs[entity].transform);
-                transformDataList.Add(transformData);
+            for (int i = 0; i < disableEntityList.Count; i ++)
+            {
+                var obj = m_DicObjs[disableEntityList[i]];
+                Destroy(obj);
+                m_DicObjs.Remove(disableEntityList[i]);
             }
             
-            var accessArray = new TransformAccessArray(transformList.ToArray());
-            var transformDatas = transformDataList.ToNativeArray(Allocator.TempJob);
-
+            var accessArray = new TransformAccessArray(transforms);
             var job = new TransformJob()
             {
                 transformDatas = transformDatas,
@@ -90,6 +97,8 @@ public class SampleScene : MonoBehaviour
             
             transformDatas.Dispose();
             accessArray.Dispose();
+            entities.Dispose();
         }
+        query.Dispose();
     }
 }
