@@ -101,4 +101,40 @@ public class SampleScene : MonoBehaviour
     //     }
     //     query.Dispose();
     // }
+
+    private ECSPrefabInitializerData m_PrefabInitializer;
+
+    private void Update()
+    {
+        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        
+        // if (m_PrefabInitializer.IsValid == false)
+        {
+            var query = entityManager.CreateEntityQuery(typeof(ECSPrefabInitializerData));
+            if (query.IsEmpty == false)
+            {
+                var entity = query.GetSingletonEntity();
+                m_PrefabInitializer = entityManager.GetComponentObject<ECSPrefabInitializerData>(entity);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (m_PrefabInitializer != null)
+            {
+                var ecb = new EntityCommandBuffer(Allocator.Temp);
+                var prefab = m_PrefabInitializer.GetPrefab("Cube");
+                var newEntity = ecb.Instantiate(prefab);
+                // ecb.AddComponent(newEntity, typeof(LocalTransform));
+                ecb.SetComponent(newEntity, new LocalTransform()
+                {
+                    Position = new float3( UnityEngine.Random.Range(-100f, 100f), 0f, UnityEngine.Random.Range(-100f, 100f) ),
+                    Rotation = quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f),
+                    Scale = 1f,
+                });
+                ecb.Playback(entityManager);
+                ecb.Dispose();
+            }
+        }
+    }
 }
