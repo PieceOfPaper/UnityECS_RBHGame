@@ -2,50 +2,37 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
-using Unity.Mathematics;
-using UnityEngine;
 using Unity.Collections;
+using UnityEngine;
 
 [ChunkSerializable]
-public partial struct ECSPrefabInitializerData : ISharedComponentData, IEquatable<ECSPrefabInitializerData>
+public partial class ECSPrefabInitializerData : IComponentData/*, IEquatable<ECSPrefabInitializerData>, IDisposable*/
 {
-    private static int s_CurrentCode = 1;
-
-    public int code;
-    public NativeHashMap<int, Entity> datas;
-
-    public ECSPrefabInitializerData (NativeArray<int> ids, NativeArray<Entity> entities)
+    public NativeHashMap<int, Entity> prefabs;
+    
+    public ECSPrefabInitializerData()
     {
-        code = s_CurrentCode ++;
-        
-        var cnt = math.min(ids.Length, entities.Length);
-        this.datas = new NativeHashMap<int, Entity>(cnt, Allocator.Persistent);
-        
-        for (int i = 0; i < cnt; i ++)
+        this.prefabs = new NativeHashMap<int, Entity>(0, Allocator.Persistent);
+    }
+
+    public ECSPrefabInitializerData (NativeHashMap<int, Entity> prefabs)
+    {
+        this.prefabs = prefabs;
+    }
+    
+    public Entity GetPrefab(int id)
+    {
+        Entity prefab = default;
+        if (this.prefabs.TryGetValue(id, out prefab) == false)
         {
-            this.datas.TryAdd(ids[i], entities[i]);
+            Debug.LogError("Not Found " + id);
+            Debug.Log(this.prefabs.Count);
         }
+        return prefab;
     }
     
-    public Entity GetEntity(int id)
+    public Entity GetPrefab(string name)
     {
-        Entity entity = default;
-        this.datas.TryGetValue(id, out entity);
-        return entity;
-    }
-    
-    public Entity GetEntity(string name)
-    {
-        return GetEntity(ECSPrefabInitializerUtility.NameToID(name));
-    }
-
-    public bool Equals(ECSPrefabInitializerData other)
-    {
-        return this.code == other.code;
-    }
-
-    public override int GetHashCode()
-    {
-        return this.code;
+        return GetPrefab(ECSPrefabInitializerUtility.NameToID(name));
     }
 }

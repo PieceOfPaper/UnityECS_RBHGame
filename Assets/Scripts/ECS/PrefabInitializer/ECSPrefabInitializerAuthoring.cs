@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
 using Unity.Collections;
+using Unity.Entities.Serialization;
+using Unity.Scenes;
 
 public static class ECSPrefabInitializerUtility
 {
@@ -24,7 +26,7 @@ public static class ECSPrefabInitializerUtility
 public class ECSPrefabInitializerAuthoring : MonoBehaviour
 {
     [SerializeField] public Data[] datas;
-
+    
     [System.Serializable]
     public struct Data
     {
@@ -36,20 +38,18 @@ public class ECSPrefabInitializerAuthoring : MonoBehaviour
     {
         public override void Bake(ECSPrefabInitializerAuthoring authoring)
         {
-            var ids = new NativeArray<int>(authoring.datas.Length, Allocator.Temp);
-            var entities = new NativeArray<Entity>(authoring.datas.Length, Allocator.Temp);
+            var entity = GetEntity(TransformUsageFlags.Dynamic);
+
+            var datas = new NativeHashMap<int, Entity>(authoring.datas.Length, Allocator.Persistent);
             for (int i = 0; i < authoring.datas.Length; i ++)
             {
-                ids[i] = ECSPrefabInitializerUtility.NameToID(authoring.datas[i].name);
-                entities[i] = GetEntity(authoring.datas[i].prefab);
+                var id = ECSPrefabInitializerUtility.NameToID(authoring.datas[i].name);
+                var prefab = GetEntity(authoring.datas[i].prefab, TransformUsageFlags.Dynamic);
+                datas.TryAdd(id, prefab);
             }
 
-            var entity = GetEntity(TransformUsageFlags.Dynamic);
-            var componentData = new ECSPrefabInitializerData(ids, entities);
-            AddSharedComponentManaged(entity, componentData);
-
-            ids.Dispose();
-            entities.Dispose();
+            var componentData = new ECSPrefabInitializerData(datas);
+            AddComponentObject(entity, componentData);
         }
     }
 }
