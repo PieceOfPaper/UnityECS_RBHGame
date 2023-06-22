@@ -31,7 +31,7 @@ public partial struct ECSMoveSystem : ISystem
                 dir = math.mul(transform.Rotation, new float3(0f, 0f, 1f));
 
             var moveDistance = moveData.currentSpeed * deltaTime + 0.5f * moveData.accel * deltaTime * deltaTime;
-            moveData.currentSpeed += moveData.accel * deltaTime;
+            moveData.currentSpeed = math.min(moveData.currentSpeed + moveData.accel * deltaTime, moveData.maxSpeed);
             
             transform = transform.Translate(dir * moveDistance);
         }
