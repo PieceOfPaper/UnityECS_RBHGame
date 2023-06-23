@@ -19,7 +19,7 @@ public class ECSCharacterAuthoring : MonoBehaviour
                     hp = authoring.hp,
                     maxHp = authoring.hp,
                });
-
+               
                var gameObject = GameObject.Instantiate(authoring.prefab);
                AddComponentObject(entity, new ECSBindGameObject()
                {
