@@ -8,6 +8,7 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+[UpdateInGroup(typeof(ECSSpawnSystemGroup))]
 public partial struct ECSSpawnSystem : ISystem
 {
     public void OnCreate(ref SystemState state)

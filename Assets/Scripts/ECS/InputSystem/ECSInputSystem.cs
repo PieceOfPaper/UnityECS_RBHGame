@@ -9,7 +9,7 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[UpdateBefore(typeof(ECSMoveSystem))]
+[UpdateInGroup(typeof(ECSInputSystemGroup))]
 public partial struct ECSInputSystem : ISystem, InputActionMain.IPlayerActions
 {
     static InputActionMain mainInputAction = null;

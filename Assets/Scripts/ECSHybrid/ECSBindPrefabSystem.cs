@@ -4,6 +4,7 @@ using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
+[UpdateInGroup(typeof(ECSAfterProcessSystemGroup))]
 public partial struct ECSBindPrefabSystem : ISystem
 {
     public void OnUpdate(ref SystemState state)

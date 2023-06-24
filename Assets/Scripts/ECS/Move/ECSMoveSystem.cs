@@ -7,6 +7,7 @@ using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+[UpdateInGroup(typeof(ECSProcessSystemGroup))]
 public partial struct ECSMoveSystem : ISystem
 {
     public void OnCreate(ref SystemState state)

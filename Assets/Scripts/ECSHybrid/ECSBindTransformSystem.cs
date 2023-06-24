@@ -4,7 +4,8 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
 
-[UpdateAfter(typeof(ECSMoveSystem))]
+[UpdateInGroup(typeof(ECSAfterProcessSystemGroup))]
+[UpdateAfter(typeof(ECSBindPrefabSystem))]
 public partial struct ECSBindTransformSystem : ISystem
 {
     public void OnUpdate(ref SystemState state)
