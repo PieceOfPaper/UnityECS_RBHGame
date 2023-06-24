@@ -7,7 +7,6 @@ using Unity.Entities;
 public class ECSCharacterAuthoring : MonoBehaviour
 {
      public int hp = 100;
-     public GameObject prefab;
      
      public class Baker : Baker<ECSCharacterAuthoring>
      {
@@ -18,16 +17,6 @@ public class ECSCharacterAuthoring : MonoBehaviour
                {
                     hp = authoring.hp,
                     maxHp = authoring.hp,
-               });
-               
-               var gameObject = GameObject.Instantiate(authoring.prefab);
-               AddComponentObject(entity, new ECSBindGameObject()
-               {
-                    gameObject = gameObject,
-               });
-               AddComponentObject(entity, new ECSBindTransform()
-               {
-                    transform = gameObject.transform,
                });
           }
      }
