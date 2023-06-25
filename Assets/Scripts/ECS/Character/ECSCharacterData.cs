@@ -8,4 +8,5 @@ public partial struct ECSCharacterData : IComponentData
 {
     public int hp;
     public int maxHp;
+    public float radius;
 }

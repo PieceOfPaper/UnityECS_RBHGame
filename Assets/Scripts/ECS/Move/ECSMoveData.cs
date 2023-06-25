@@ -15,4 +15,5 @@ public partial struct ECSMoveData : IComponentData
     
     public bool isMoving;
     public float currentSpeed;
+    public float3 force;
 }

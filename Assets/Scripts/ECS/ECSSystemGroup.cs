@@ -16,9 +16,15 @@ public partial class ECSInputSystemGroup : ComponentSystemGroup { }
 public partial class ECSSpawnSystemGroup : ComponentSystemGroup { }
 
 /// <summary>
-/// 아무튼 뭔가 처리하는 그룹.
+/// 아무튼 사전에 처리하는 그룹.
 /// </summary>
 [UpdateAfter(typeof(ECSSpawnSystemGroup))]
+public partial class ECSPreProcessSystemGroup : ComponentSystemGroup { }
+
+/// <summary>
+/// 처리하는 그룹.
+/// </summary>
+[UpdateAfter(typeof(ECSPreProcessSystemGroup))]
 public partial class ECSProcessSystemGroup : ComponentSystemGroup { }
 
 /// <summary>
