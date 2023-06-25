@@ -18,17 +18,26 @@ public partial struct ECSCollisionSystem : ISystem
         public float3 position;
         public quaternion rotation;
         public float moveSpeed;
+        public int attackableLayer;
+        public int attackDamage;
     }
     
     [BurstCompile]
     private partial struct CollisionMovableEntityJob : IJobEntity
     {
+        public float deltaTime;
         [ReadOnly] public NativeArray<MovableEntity> movableEntityDataArray;
         
-        private void Execute(in Entity refEntity, in ECSCharacterData refCharacterData, in LocalTransform refTransform, ref ECSMoveData refMoveData)
+        private void Execute(in Entity refEntity, ref ECSCharacterData refCharacterData, in LocalTransform refTransform, ref ECSMoveData refMoveData)
         {
             var myMoveData = refMoveData;
+            var myCharacterData = refCharacterData;
+            var myLayer = (int)myCharacterData.layer;
             var myEntityRadius = refCharacterData.radius;
+            
+            if (myCharacterData.damagedTimer > 0f)
+                myCharacterData.damagedTimer = math.max(0f, myCharacterData.damagedTimer - deltaTime);
+            
             for (int i = 0; i < movableEntityDataArray.Length; i ++)
             {
                 var movableEntity = movableEntityDataArray[i];
@@ -37,9 +46,18 @@ public partial struct ECSCollisionSystem : ISystem
                 if (math.distancesq(movableEntity.position, refTransform.Position) < (myEntityRadius + movableEntity.radius) * (myEntityRadius + movableEntity.radius))
                 {
                     myMoveData.force += math.normalize(refTransform.Position - movableEntity.position) * movableEntity.moveSpeed * 0.1f;
+                    if (myCharacterData.hp > 0 && myCharacterData.damagedTimer <= 0f && (movableEntity.attackableLayer & (1 << myLayer)) > 0)
+                    {
+                        myCharacterData.hp -= movableEntity.attackDamage;
+                        myCharacterData.damagedTimer += 1.0f; //TODO - 어딘가에 정의해두자.
+                        if (myCharacterData.hp == 0)
+                            myCharacterData.isDead = true;
+                    }
                 }
             }
+            
             refMoveData = myMoveData;
+            refCharacterData = myCharacterData;
         }
     }
     
@@ -60,6 +78,8 @@ public partial struct ECSCollisionSystem : ISystem
                 position = characterTransformArray[i].Position,
                 rotation = characterTransformArray[i].Rotation,
                 moveSpeed = characterMoveDataArray[i].currentSpeed,
+                attackableLayer = characterDataArray[i].attackableLayer,
+                attackDamage = characterDataArray[i].attackDamage,
             };
         }
         characterEntityArray.Dispose();
@@ -69,6 +89,7 @@ public partial struct ECSCollisionSystem : ISystem
 
         var collisionMovableEntityJob = new CollisionMovableEntityJob()
         {
+            deltaTime = SystemAPI.Time.DeltaTime,
             movableEntityDataArray = movableEntityDataArray,
         };
         state.Dependency = collisionMovableEntityJob.ScheduleParallel(characterQuery, state.Dependency);

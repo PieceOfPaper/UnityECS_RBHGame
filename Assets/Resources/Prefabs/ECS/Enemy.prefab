@@ -49,6 +49,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 100
   radius: 0.32
+  layer: 2
+  attackableLayer: 2
+  attackDamage: 1
 --- !u!114 &3405870511010612620
 MonoBehaviour:
   m_ObjectHideFlags: 0

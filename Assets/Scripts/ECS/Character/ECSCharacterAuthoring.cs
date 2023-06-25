@@ -8,6 +8,10 @@ public class ECSCharacterAuthoring : MonoBehaviour
 {
      public int hp = 100;
      public float radius = 1.0f;
+     public ECSCharacterLayer layer;
+    
+     public int attackableLayer = 0;
+     public int attackDamage = 0;
      
      public class Baker : Baker<ECSCharacterAuthoring>
      {
@@ -19,6 +23,9 @@ public class ECSCharacterAuthoring : MonoBehaviour
                     hp = authoring.hp,
                     maxHp = authoring.hp,
                     radius = authoring.radius,
+                    layer = authoring.layer,
+                    attackableLayer = authoring.attackableLayer,
+                    attackDamage = authoring.attackDamage,
                });
           }
      }
