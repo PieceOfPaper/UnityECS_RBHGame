@@ -25,8 +25,15 @@ public partial struct ECSMoveSystem : ISystem
     {
         public float deltaTime;
         
-        private void Execute(ref ECSMoveData moveData, ref LocalTransform transform)
+        private void Execute(ref ECSMoveData refMoveData, ref LocalTransform transform)
         {
+            var moveData = refMoveData;
+            if (moveData.isMoving == false)
+            {
+                refMoveData.currentSpeed = 0f;
+                return;
+            }
+            
             var dir = moveData.customDir;
             if (moveData.useCustomdir == false)
                 dir = math.mul(transform.Rotation, new float3(0f, 0f, 1f));
@@ -35,6 +42,7 @@ public partial struct ECSMoveSystem : ISystem
             moveData.currentSpeed = math.min(moveData.currentSpeed + moveData.accel * deltaTime, moveData.maxSpeed);
             
             transform = transform.Translate(dir * moveDistance);
+            refMoveData = moveData;
         }
     }
 

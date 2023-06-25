@@ -9,9 +9,9 @@ public class ECSMoveAuthoring : MonoBehaviour
     public bool useCustomdir;
     public Vector3 customDir;
     
-    public float speed;
-    public float accel;
-    public float maxSpeed;
+    public float speed = 1.0f;
+    public float accel = 1.0f;
+    public float maxSpeed = 3.0f;
     
     public class Baker : Baker<ECSMoveAuthoring>
     {

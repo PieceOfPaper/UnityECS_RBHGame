@@ -12,7 +12,7 @@ public partial struct ECSMoveData : IComponentData
     public float speed;
     public float accel;
     public float maxSpeed;
-
-
+    
+    public bool isMoving;
     public float currentSpeed;
 }

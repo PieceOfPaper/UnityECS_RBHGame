@@ -74,9 +74,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useCustomdir: 0
   customDir: {x: 0, y: 0, z: 0}
-  speed: 0
-  accel: 0
-  maxSpeed: 0
+  speed: 2
+  accel: 4
+  maxSpeed: 4
 --- !u!114 &6819095932272770442
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -44,15 +44,11 @@ public partial struct ECSInputSystem : ISystem, InputActionMain.IPlayerActions
             {
                 var radian = 90f * Mathf.Deg2Rad - math.atan2(moveDir.y, moveDir.x);
                 localTransform.ValueRW.Rotation = quaternion.Euler(0f, radian, 0f);
-                moveData.speed = 1f;
-                moveData.accel = 1f;
-                moveData.maxSpeed = 3f;
+                moveData.isMoving = true;
             }
             else
             {
-                moveData.speed = 0f;
-                moveData.accel = 0f;
-                moveData.maxSpeed = 0f;
+                moveData.isMoving = false;
             }
             moveDataRW.ValueRW = moveData;
         }
