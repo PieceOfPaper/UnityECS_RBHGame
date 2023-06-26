@@ -28,12 +28,12 @@ public class CinemachineVirtualCameraPlayerFollow : MonoBehaviour
         VCam.LookAt = null;
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         if (m_TargetTrasnform == null)
         {
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            EntityQuery query = entityManager.CreateEntityQuery(typeof(ECSPlayerTag));
+            EntityQuery query = entityManager.CreateEntityQuery(typeof(ECSPlayerTag), typeof(ECSBindTransform));
             if (query.IsEmpty == false)
             {
                 var entity = query.GetSingletonEntity();
