@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-public class ECSBindGameObject : IComponentData, IDisposable, ICloneable
+public partial class ECSBindAutoPrefab : IComponentData, IDisposable, ICloneable
 {
+    public GameObject prefab;
     public GameObject gameObject;
     
     public void Dispose()
@@ -22,9 +23,10 @@ public class ECSBindGameObject : IComponentData, IDisposable, ICloneable
 
     public object Clone()
     {
-        return new ECSBindGameObject()
+        return new ECSBindAutoPrefab()
         {
-            gameObject = gameObject == null ? null : GameObject.Instantiate(gameObject),
+            prefab = prefab,
+            gameObject = gameObject == null ? null : GameObject.Instantiate(prefab),
         };
     }
 }
