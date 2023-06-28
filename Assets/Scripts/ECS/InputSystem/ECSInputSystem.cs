@@ -37,23 +37,30 @@ public partial struct ECSInputSystem : ISystem, InputActionMain.IPlayerActions
 
     public void OnUpdate(ref SystemState state)
     {
-        foreach (var (playerTag, moveDataRW, localTransform) in SystemAPI.Query<RefRO<ECSPlayerTag>, RefRW<ECSMoveData>, RefRW<LocalTransform>>())
+        var mainCamera = Camera.main;
+        foreach (var (playerTag, moveDataRW, shootableDataRW, localTransform) in SystemAPI.Query<RefRO<ECSPlayerTag>, RefRW<ECSMoveData>, RefRW<ECSShootableData>, RefRW<LocalTransform>>())
         {
+            if (mainCamera != null)
+            {
+                var screenPoint = mainCamera.WorldToScreenPoint(localTransform.ValueRO.Position);
+                var screenPointDif = Input.mousePosition - screenPoint;
+                localTransform.ValueRW.Rotation = quaternion.Euler(0f, 90f * Mathf.Deg2Rad - math.atan2(screenPointDif.y, screenPointDif.x), 0f);
+            }
+            
             var moveData = moveDataRW.ValueRO;
             if (moveDir.sqrMagnitude > 0f)
             {
-                var radian = 90f * Mathf.Deg2Rad - math.atan2(moveDir.y, moveDir.x);
-                localTransform.ValueRW.Rotation = quaternion.Euler(0f, radian, 0f);
+                moveData.useCustomdir = true;
+                moveData.customDir = mainCamera == null ? new float3(moveDir.x, 0f, moveDir.y) : math.mul(quaternion.Euler(0f, mainCamera.transform.eulerAngles.y * Mathf.Deg2Rad, 0f), new float3(moveDir.x, 0f, moveDir.y));
                 moveData.isMoving = true;
             }
             else
             {
+                moveData.useCustomdir = false;
                 moveData.isMoving = false;
             }
             moveDataRW.ValueRW = moveData;
-        }
-        foreach (var (playerTag, shootableDataRW, localTransform) in SystemAPI.Query<RefRO<ECSPlayerTag>, RefRW<ECSShootableData>, RefRW<LocalTransform>>())
-        {
+            
             var shootableData = shootableDataRW.ValueRO;
             shootableData.pressShoot = onKeyFire;
             shootableDataRW.ValueRW = shootableData;
