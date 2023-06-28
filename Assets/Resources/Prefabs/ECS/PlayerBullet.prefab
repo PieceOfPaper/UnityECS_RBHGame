@@ -9,13 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2768346764539508946}
-  - component: {fileID: 6967117029669183269}
-  - component: {fileID: 7921650769503268911}
   - component: {fileID: 3405870511010612620}
-  - component: {fileID: 6819095932272770442}
-  - component: {fileID: 4808868612699291936}
+  - component: {fileID: -7307717553427025541}
+  - component: {fileID: 494574323138339333}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PlayerBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36,35 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6967117029669183269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 74821141673352370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16590a45638f74c2f8fd75b504054f58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7921650769503268911
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 74821141673352370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b291cccc30e2d4edd9652b3e7e2527d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hp: 100
-  radius: 0.5
-  layer: 1
-  attackableLayer: 0
-  attackDamage: 0
 --- !u!114 &3405870511010612620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,10 +48,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useCustomdir: 0
   customDir: {x: 0, y: 0, z: 0}
-  speed: 2
-  accel: 4
-  maxSpeed: 4
---- !u!114 &6819095932272770442
+  speed: 10
+  accel: 0
+  maxSpeed: 10
+  isMoving: 1
+--- !u!114 &-7307717553427025541
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,11 +61,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 74821141673352370}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e6750b87b9494595b8d0dc2283ede6e, type: 3}
+  m_Script: {fileID: 11500000, guid: 43da504b117184bc988444092fe9e9c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 74821141673352370, guid: bf5ae4476856640c190755ca534ac661, type: 3}
---- !u!114 &4808868612699291936
+  radius: 0.2
+  attackableLayer: 4
+  attackDamage: 10
+--- !u!114 &494574323138339333
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -104,13 +76,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 74821141673352370}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d32ccea579ce84c048d7f328e512f596, type: 3}
+  m_Script: {fileID: 11500000, guid: 895753e8f29224441920075721448ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 74821141673352370, guid: 4ccd72bcb2aad42cf8ec3841ac942e29, type: 3}
-  shootPoint: {x: 0, y: 0.2, z: 0.4}
-  shootCount: 1
-  shootSpreadRange: 10
-  shootCooltime: 0.5
-  reloadCount: 6
-  reloadTime: 1
+  prefab: {fileID: 1907252612990072321, guid: 6afd07bf6c9c744e6b9b5dc129159126, type: 3}

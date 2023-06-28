@@ -12,6 +12,8 @@ public class ECSMoveAuthoring : MonoBehaviour
     public float speed = 1.0f;
     public float accel = 1.0f;
     public float maxSpeed = 3.0f;
+
+    public bool isMoving = false;
     
     public class Baker : Baker<ECSMoveAuthoring>
     {
@@ -26,6 +28,7 @@ public class ECSMoveAuthoring : MonoBehaviour
                 accel = authoring.accel,
                 maxSpeed = authoring.maxSpeed,
                 currentSpeed = authoring.speed,
+                isMoving = authoring.isMoving,
             });
         }
     }

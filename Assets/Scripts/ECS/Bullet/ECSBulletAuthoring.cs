@@ -1,0 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Entities;
+using UnityEngine;
+
+public class ECSBulletAuthoring : MonoBehaviour
+{
+    public float radius = 0.2f;
+    public int attackableLayer;
+    public int attackDamage;
+
+    public partial class Baker : Baker<ECSBulletAuthoring>
+    {
+        public override void Bake(ECSBulletAuthoring authoring)
+        {
+            var entity = GetEntity(TransformUsageFlags.Dynamic);
+            AddComponent(entity, new ECSBulletData()
+            {
+                radius = authoring.radius,
+                attackableLayer = authoring.attackableLayer,
+                attackDamage = authoring.attackDamage,
+            });
+        }
+    }
+}

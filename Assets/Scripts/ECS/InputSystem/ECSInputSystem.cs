@@ -52,6 +52,12 @@ public partial struct ECSInputSystem : ISystem, InputActionMain.IPlayerActions
             }
             moveDataRW.ValueRW = moveData;
         }
+        foreach (var (playerTag, shootableDataRW, localTransform) in SystemAPI.Query<RefRO<ECSPlayerTag>, RefRW<ECSShootableData>, RefRW<LocalTransform>>())
+        {
+            var shootableData = shootableDataRW.ValueRO;
+            shootableData.pressShoot = onKeyFire;
+            shootableDataRW.ValueRW = shootableData;
+        }
     }
     
 
