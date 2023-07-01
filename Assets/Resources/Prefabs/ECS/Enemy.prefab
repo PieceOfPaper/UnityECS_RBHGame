@@ -47,9 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b291cccc30e2d4edd9652b3e7e2527d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 100
+  hp: 20
   radius: 0.32
   layer: 2
+  damagedCooltime: 0
   attackableLayer: 2
   attackDamage: 1
 --- !u!114 &3405870511010612620
@@ -69,6 +70,7 @@ MonoBehaviour:
   speed: 1
   accel: 2
   maxSpeed: 2
+  isMoving: 0
 --- !u!114 &-863233281608050342
 MonoBehaviour:
   m_ObjectHideFlags: 0

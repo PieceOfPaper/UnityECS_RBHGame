@@ -8,6 +8,10 @@ public class ECSBulletAuthoring : MonoBehaviour
     public float radius = 0.2f;
     public int attackableLayer;
     public int attackDamage;
+    
+    public int hitCount = 1;
+    public float moveDistance = 10f;
+    public float duration = 1.0f;
 
     public partial class Baker : Baker<ECSBulletAuthoring>
     {
@@ -19,6 +23,9 @@ public class ECSBulletAuthoring : MonoBehaviour
                 radius = authoring.radius,
                 attackableLayer = authoring.attackableLayer,
                 attackDamage = authoring.attackDamage,
+                hitCount = authoring.hitCount,
+                moveDistance = authoring.moveDistance,
+                duration = authoring.duration,
             });
         }
     }

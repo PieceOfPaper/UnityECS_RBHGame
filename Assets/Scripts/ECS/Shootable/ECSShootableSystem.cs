@@ -33,7 +33,7 @@ public partial struct ECSShootableSystem : ISystem
                 {
                     var bulletEntity = ecb.Instantiate(0, shootableData.bullet);
                     var bulletTransform = refLocalTransform;
-                    bulletTransform = bulletTransform.RotateY(startAngle + i * shootableData.shootSpreadRange);
+                    bulletTransform = bulletTransform.RotateY((startAngle + i * shootableData.shootSpreadRange) * Mathf.Deg2Rad);
                     bulletTransform = bulletTransform.Translate(shootableData.shootPoint);
                     ecb.SetComponent(0, bulletEntity, bulletTransform);
                 }

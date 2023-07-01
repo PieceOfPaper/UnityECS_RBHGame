@@ -159,7 +159,7 @@ MonoBehaviour:
   - prefab: {fileID: 74821141673352370, guid: e0b08ad274f324ad580ebc9a8013d2d1, type: 3}
     rate: 100
   spawnDelay: 0.5
-  spawnCount: 10
+  spawnCount: 9999
   rangeType: 0
   rangeArg1: 5
   rangeArg2: 360
