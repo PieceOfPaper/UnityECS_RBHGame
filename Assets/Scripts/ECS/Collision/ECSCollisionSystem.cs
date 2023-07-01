@@ -21,8 +21,9 @@ public partial struct ECSCollisionSystem : ISystem
 {
     public static NativeList<ECSFloatingDamageData> FloatingDamageList;
 
-    public struct MovableEntity
+    private struct CollisionData
     {
+        public byte type; //1-character, 2-bullet
         public Entity entity;
         public float radius;
         public float3 position;
@@ -30,52 +31,125 @@ public partial struct ECSCollisionSystem : ISystem
         public float moveSpeed;
         public int attackableLayer;
         public int attackDamage;
+        
+        public ECSCharacterData characterData;
+        public ECSBulletData bulletData;
     }
-    
+
+    private struct CollisionResultData
+    {
+        public bool isCollision;
+        public int sortKey;
+        public Entity entity;
+        public ECSCharacterData characterData;
+        public LocalTransform localTransform;
+        public CollisionData collisionData;
+    }
+
     [BurstCompile]
-    private partial struct CollisionMovableEntityJob : IJobEntity
+    private partial struct CollisionJob : IJobEntity
     {
         public float deltaTime;
-        [ReadOnly] public NativeArray<MovableEntity> movableEntityDataArray;
-        public NativeArray<ECSFloatingDamageData> floatingDamageArray;
-        
-        private void Execute([EntityIndexInQuery]int index, in Entity refEntity, ref ECSCharacterData refCharacterData, in LocalTransform refTransform, ref ECSMoveData refMoveData)
+        [ReadOnly] public NativeArray<CollisionData> collisionDataArray;
+        public NativeArray<CollisionResultData> collisionResultDataArray;
+
+        private void Execute([EntityIndexInQuery]int index, [ChunkIndexInQuery] int sortKey, in Entity refEntity, ref ECSCharacterData refCharacterData, in LocalTransform refTransform, ref ECSMoveData refMoveData)
         {
-            var myMoveData = refMoveData;
-            var myCharacterData = refCharacterData;
-            var myLayer = (int)myCharacterData.layer;
+            var moveData = refMoveData;
             var myEntityRadius = refCharacterData.radius;
-            
-            if (myCharacterData.damagedTimer > 0f)
-                myCharacterData.damagedTimer = math.max(0f, myCharacterData.damagedTimer - deltaTime);
-            
-            for (int i = 0; i < movableEntityDataArray.Length; i ++)
+
+            collisionResultDataArray[index] = new CollisionResultData()
             {
-                var movableEntity = movableEntityDataArray[i];
-                if (movableEntity.entity == refEntity) continue;
+                isCollision = false,
+                sortKey = sortKey,
+                entity = refEntity,
+                characterData = refCharacterData,
+            };
             
-                if (math.distancesq(movableEntity.position, refTransform.Position) < (myEntityRadius + movableEntity.radius) * (myEntityRadius + movableEntity.radius))
+            bool isCollision = false;
+            for (int i = 0; i < collisionDataArray.Length; i ++)
+            {
+                var collisionData = collisionDataArray[i];
+                if (collisionData.entity == refEntity) continue;
+                if (collisionData.type == 2 && collisionData.bulletData.IsWillDestroy() == true) continue;
+            
+                if (math.distancesq(collisionData.position, refTransform.Position) < (myEntityRadius + collisionData.radius) * (myEntityRadius + collisionData.radius))
                 {
-                    myMoveData.force += math.normalize(refTransform.Position - movableEntity.position) * movableEntity.moveSpeed * 0.1f;
-                    if (myCharacterData.hp > 0 && myCharacterData.damagedTimer <= 0f && (movableEntity.attackableLayer & (1 << myLayer)) > 0)
+                    //캐릭터간 충돌처리
+                    if (collisionData.type == 1)
                     {
-                        myCharacterData.hp = math.max(0, myCharacterData.hp - movableEntity.attackDamage);
-                        myCharacterData.damagedTimer += 1.0f; //TODO - 어딘가에 정의해두자.
-                        if (myCharacterData.hp == 0)
-                            myCharacterData.isDead = true;
-                        
-                        floatingDamageArray[index] = new ECSFloatingDamageData()
+                        var dir = math.normalize(new float3(refTransform.Position.x, 0f, refTransform.Position.z) - new float3(collisionData.position.x, 0f, collisionData.position.z));
+                        moveData.force += dir * collisionData.moveSpeed * 0.1f;
+                    }
+
+                    if (isCollision == false)
+                    {
+                        isCollision = true;
+                        collisionResultDataArray[index] = new CollisionResultData()
                         {
-                            layer = myCharacterData.layer,
-                            position = refTransform.Position,
-                            damage = movableEntity.attackDamage,
+                            isCollision = true,
+                            sortKey = sortKey,
+                            entity = refEntity,
+                            characterData = refCharacterData,
+                            localTransform = refTransform,
+                            collisionData = collisionData,
                         };
                     }
                 }
             }
-            
-            refMoveData = myMoveData;
-            refCharacterData = myCharacterData;
+
+            refMoveData = moveData;
+        }
+    }
+    
+    [BurstCompile]
+    private partial struct CollisionResultJob : IJob
+    {
+        public EntityCommandBuffer.ParallelWriter ecb;
+        public float deltaTime;
+        public NativeArray<CollisionResultData> collisionResultDataArray;
+        public NativeArray<ECSFloatingDamageData> floatingDamageArray;
+
+        public void Execute()
+        {
+            for (int i = 0; i < collisionResultDataArray.Length; i ++)
+            {
+                var collisionResultData = collisionResultDataArray[i];
+                var characterData = collisionResultData.characterData;
+                var collisionData = collisionResultData.collisionData;
+
+                if (characterData.damagedTimer > 0f)
+                {
+                    characterData.damagedTimer = math.max(0f, characterData.damagedTimer - deltaTime);
+                    ecb.SetComponent(collisionResultData.sortKey, collisionResultData.entity, characterData);
+                }
+                
+                if (collisionResultData.isCollision == false) continue;
+
+                var characterLayer = (int)characterData.layer;
+                if (characterData.hp > 0 && characterData.damagedTimer <= 0f && (collisionData.attackableLayer & (1 << characterLayer)) > 0)
+                {
+                    characterData.hp = math.max(0, characterData.hp - collisionData.attackDamage);
+                    characterData.damagedTimer += characterData.damagedCooltime;
+                    if (characterData.hp == 0)
+                        characterData.isDead = true;
+                    ecb.SetComponent(collisionResultData.sortKey, collisionResultData.entity, characterData);
+                    
+                    floatingDamageArray[i] = new ECSFloatingDamageData()
+                    {
+                        layer = characterData.layer,
+                        position = collisionResultData.localTransform.Position,
+                        damage = collisionData.attackDamage,
+                    };
+
+                    if (collisionData.type == 2)
+                    {
+                        var collisionBulletData = collisionData.bulletData;
+                        collisionBulletData.currentHitCount += 1;
+                        ecb.SetComponent(0, collisionData.entity, collisionBulletData);
+                    }
+                }
+            }
         }
     }
     
@@ -108,17 +182,25 @@ public partial struct ECSCollisionSystem : ISystem
     }
 
     public void OnUpdate(ref SystemState state)
-    {
+    {   
         var characterQuery = state.EntityManager.CreateEntityQuery(typeof(ECSCharacterData), typeof(ECSMoveData), typeof(LocalTransform));
         var characterEntityArray = characterQuery.ToEntityArray(Allocator.Temp);
+        var bulletQuery = state.EntityManager.CreateEntityQuery(typeof(ECSBulletData), typeof(ECSMoveData), typeof(LocalTransform));
+        var bulletEntityArray = bulletQuery.ToEntityArray(Allocator.Temp);
+
+        int characterCount = characterEntityArray.Length;
+        int bulletCount = bulletEntityArray.Length;
+        int queryCount = characterCount + bulletCount;
+        var collisionDataArray = new NativeArray<CollisionData>(queryCount, Allocator.TempJob);
+        
         var characterDataArray = characterQuery.ToComponentDataArray<ECSCharacterData>(Allocator.Temp);
         var characterTransformArray = characterQuery.ToComponentDataArray<LocalTransform>(Allocator.Temp);
         var characterMoveDataArray = characterQuery.ToComponentDataArray<ECSMoveData>(Allocator.Temp);
-        var movableEntityDataArray = new NativeArray<MovableEntity>(characterEntityArray.Length, Allocator.TempJob);
         for (int i = 0; i < characterEntityArray.Length; i ++)
         {
-            movableEntityDataArray[i] = new MovableEntity()
+            collisionDataArray[i] = new CollisionData()
             {
+                type = 1,
                 entity = characterEntityArray[i],
                 radius = characterDataArray[i].radius,
                 position = characterTransformArray[i].Position,
@@ -126,23 +208,58 @@ public partial struct ECSCollisionSystem : ISystem
                 moveSpeed = characterMoveDataArray[i].currentSpeed,
                 attackableLayer = characterDataArray[i].attackableLayer,
                 attackDamage = characterDataArray[i].attackDamage,
+                characterData = characterDataArray[i],
             };
         }
         characterEntityArray.Dispose();
         characterDataArray.Dispose();
         characterTransformArray.Dispose();
         characterMoveDataArray.Dispose();
-
-        var floatingDamageArray = new NativeArray<ECSFloatingDamageData>(characterEntityArray.Length, Allocator.TempJob);
-        var collisionMovableEntityJob = new CollisionMovableEntityJob()
+        
+        var bulletDataArray = bulletQuery.ToComponentDataArray<ECSBulletData>(Allocator.Temp);
+        var bulletTransformArray = bulletQuery.ToComponentDataArray<LocalTransform>(Allocator.Temp);
+        var bulletMoveDataArray = bulletQuery.ToComponentDataArray<ECSMoveData>(Allocator.Temp);
+        for (int i = 0; i < bulletEntityArray.Length; i ++)
+        {
+            collisionDataArray[characterEntityArray.Length + i] = new CollisionData()
+            {
+                type = 2,
+                entity = bulletEntityArray[i],
+                radius = bulletDataArray[i].radius,
+                position = bulletTransformArray[i].Position,
+                rotation = bulletTransformArray[i].Rotation,
+                moveSpeed = bulletMoveDataArray[i].currentSpeed,
+                attackableLayer = bulletDataArray[i].attackableLayer,
+                attackDamage = bulletDataArray[i].attackDamage,
+                bulletData = bulletDataArray[i],
+            };
+        }
+        bulletEntityArray.Dispose();
+        bulletDataArray.Dispose();
+        bulletTransformArray.Dispose();
+        bulletMoveDataArray.Dispose();
+        
+        var collisionResultDataArray = new NativeArray<CollisionResultData>(characterCount, Allocator.TempJob);
+        var collisionJob = new CollisionJob()
         {
             deltaTime = SystemAPI.Time.DeltaTime,
-            movableEntityDataArray = movableEntityDataArray,
+            collisionDataArray = collisionDataArray,
+            collisionResultDataArray = collisionResultDataArray,
+        };
+        state.Dependency = collisionJob.ScheduleParallel(characterQuery, state.Dependency);
+        state.Dependency = collisionDataArray.Dispose(state.Dependency);
+
+        var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
+        var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
+        var floatingDamageArray = new NativeArray<ECSFloatingDamageData>(characterCount, Allocator.TempJob);
+        var collisionResultJob = new CollisionResultJob()
+        {
+            ecb = ecb,
+            collisionResultDataArray = collisionResultDataArray,
             floatingDamageArray = floatingDamageArray,
         };
-        state.Dependency = collisionMovableEntityJob.ScheduleParallel(characterQuery, state.Dependency);
-        state.Dependency = movableEntityDataArray.Dispose(state.Dependency);
-        characterQuery.Dispose();
+        state.Dependency = collisionResultJob.Schedule(state.Dependency);
+        state.Dependency = collisionResultDataArray.Dispose(state.Dependency);
         
         var floatingDamageCopyJob = new FloatingDamageCopyJob()
         {
@@ -151,5 +268,8 @@ public partial struct ECSCollisionSystem : ISystem
         };
         state.Dependency = floatingDamageCopyJob.Schedule(state.Dependency);
         state.Dependency = floatingDamageArray.Dispose(state.Dependency);
+        
+        characterQuery.Dispose();
+        bulletQuery.Dispose();
     }
 }

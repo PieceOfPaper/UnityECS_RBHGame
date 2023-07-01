@@ -9,6 +9,7 @@ public class ECSCharacterAuthoring : MonoBehaviour
      public int hp = 100;
      public float radius = 1.0f;
      public ECSCharacterLayer layer;
+     public float damagedCooltime = 0f;
     
      public int attackableLayer = 0;
      public int attackDamage = 0;
@@ -24,8 +25,10 @@ public class ECSCharacterAuthoring : MonoBehaviour
                     maxHp = authoring.hp,
                     radius = authoring.radius,
                     layer = authoring.layer,
+                    damagedCooltime = authoring.damagedCooltime,
                     attackableLayer = authoring.attackableLayer,
                     attackDamage = authoring.attackDamage,
+                    damagedTimer = authoring.damagedCooltime,
                });
           }
      }

@@ -32,3 +32,9 @@ public partial class ECSProcessSystemGroup : ComponentSystemGroup { }
 /// </summary>
 [UpdateAfter(typeof(ECSProcessSystemGroup))]
 public partial class ECSAfterProcessSystemGroup : ComponentSystemGroup { }
+
+/// <summary>
+/// 실제 오브젝트 처리하는 그룹
+/// </summary>
+[UpdateAfter(typeof(ECSAfterProcessSystemGroup))]
+public partial class ECSBindProcessSystemGroup : ComponentSystemGroup { }

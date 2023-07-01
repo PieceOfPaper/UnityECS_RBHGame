@@ -23,6 +23,7 @@ public class ECSCharacterAuthoringInspector : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("hp"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("radius"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("layer"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("damagedCooltime"));
         if (targets.Length == 1)
         {
             var script = target as ECSCharacterAuthoring;

@@ -5,7 +5,7 @@ using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
 
-[UpdateInGroup(typeof(ECSAfterProcessSystemGroup))]
+[UpdateInGroup(typeof(ECSBindProcessSystemGroup))]
 public partial struct ECSBindPrefabSystem : ISystem
 {
     private static Dictionary<GameObject, Queue<GameObject>> m_QueuedAutoPrefabs;

@@ -63,6 +63,7 @@ MonoBehaviour:
   hp: 100
   radius: 0.5
   layer: 1
+  damagedCooltime: 1
   attackableLayer: 0
   attackDamage: 0
 --- !u!114 &3405870511010612620
@@ -82,6 +83,7 @@ MonoBehaviour:
   speed: 2
   accel: 4
   maxSpeed: 4
+  isMoving: 0
 --- !u!114 &6819095932272770442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,8 +111,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 74821141673352370, guid: 4ccd72bcb2aad42cf8ec3841ac942e29, type: 3}
   shootPoint: {x: 0, y: 0.2, z: 0.4}
-  shootCount: 1
+  shootCount: 2
   shootSpreadRange: 10
-  shootCooltime: 0.5
-  reloadCount: 6
-  reloadTime: 1
+  shootCooltime: 0.1
+  reloadCount: 12
+  reloadTime: 0.5

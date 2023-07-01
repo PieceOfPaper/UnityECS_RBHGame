@@ -17,6 +17,7 @@ public partial struct ECSCharacterData : IComponentData
     public int maxHp;
     public float radius;
     public ECSCharacterLayer layer;
+    public float damagedCooltime;
     
     public int attackableLayer;
     public int attackDamage;
