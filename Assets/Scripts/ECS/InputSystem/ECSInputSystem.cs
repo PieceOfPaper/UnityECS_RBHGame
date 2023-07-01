@@ -12,9 +12,10 @@ using UnityEngine.InputSystem;
 [UpdateInGroup(typeof(ECSInputSystemGroup))]
 public partial struct ECSInputSystem : ISystem, InputActionMain.IPlayerActions
 {
-    static InputActionMain mainInputAction = null;
-    static bool onKeyFire = false;
-    static Vector2 moveDir = Vector2.zero;
+    private static InputActionMain mainInputAction = null;
+    private static bool onKeyFire = false;
+    private static Vector2 moveDir = Vector2.zero;
+    private static Vector2 lookDir = Vector2.zero;
     
     public void OnCreate(ref SystemState state)
     {
@@ -40,11 +41,9 @@ public partial struct ECSInputSystem : ISystem, InputActionMain.IPlayerActions
         var mainCamera = Camera.main;
         foreach (var (playerTag, moveDataRW, shootableDataRW, localTransform) in SystemAPI.Query<RefRO<ECSPlayerTag>, RefRW<ECSMoveData>, RefRW<ECSShootableData>, RefRW<LocalTransform>>())
         {
-            if (mainCamera != null)
+            if (lookDir.sqrMagnitude > 0f)
             {
-                var screenPoint = mainCamera.WorldToScreenPoint(localTransform.ValueRO.Position);
-                var screenPointDif = Input.mousePosition - screenPoint;
-                localTransform.ValueRW.Rotation = quaternion.Euler(0f, 90f * Mathf.Deg2Rad - math.atan2(screenPointDif.y, screenPointDif.x), 0f);
+                localTransform.ValueRW.Rotation = quaternion.Euler(0f, 90f * Mathf.Deg2Rad - math.atan2(lookDir.y, lookDir.x), 0f);
             }
             
             var moveData = moveDataRW.ValueRO;
@@ -75,7 +74,15 @@ public partial struct ECSInputSystem : ISystem, InputActionMain.IPlayerActions
 
     void InputActionMain.IPlayerActions.OnLook(InputAction.CallbackContext context)
     {
-        // throw new System.NotImplementedException();
+        switch (context.control.device.name)
+        {
+            case "Mouse":
+                lookDir = Input.mousePosition - new Vector3(Screen.width, Screen.height) * 0.5f;
+                break;
+            default:
+                lookDir = context.ReadValue<Vector2>();
+                break;
+        }
     }
     
     void InputActionMain.IPlayerActions.OnMove(InputAction.CallbackContext context)
