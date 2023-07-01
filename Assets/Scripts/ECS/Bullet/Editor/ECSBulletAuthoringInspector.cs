@@ -35,6 +35,7 @@ public class ECSBulletAuthoringInspector : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("hitCount"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("moveDistance"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("duration"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("hitEffect"));
         
         if (serializedObject.hasModifiedProperties)
         {

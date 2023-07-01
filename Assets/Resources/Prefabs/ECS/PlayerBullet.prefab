@@ -67,6 +67,11 @@ MonoBehaviour:
   radius: 0.2
   attackableLayer: 4
   attackDamage: 10
+  hitCount: 1
+  moveDistance: 10
+  duration: 1
+  hitEffect: {fileID: 4961741159640863199, guid: d7d5c99734d0e4451b30266685c33053,
+    type: 3}
 --- !u!114 &494574323138339333
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -23,7 +23,7 @@ public partial struct ECSShootableSystem : ISystem
             {
                 shootableData.currentReloadTime -= deltaTime;
                 if (shootableData.currentReloadTime <= 0f)
-                    shootableData.remainShootCount = shootableData.shootCount;
+                    shootableData.remainShootCount = shootableData.reloadCount;
             }
             
             if (shootableData.pressShoot == true && shootableData.remainShootCount > 0 && shootableData.currentShootCooltime <= 0f && shootableData.currentReloadTime <= 0f)

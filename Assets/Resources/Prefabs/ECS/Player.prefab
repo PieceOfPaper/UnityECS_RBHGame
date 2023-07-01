@@ -64,8 +64,10 @@ MonoBehaviour:
   radius: 0.5
   layer: 1
   damagedCooltime: 1
+  deadEffect: {fileID: 0}
   attackableLayer: 0
   attackDamage: 0
+  hitEffect: {fileID: 0}
 --- !u!114 &3405870511010612620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,8 +113,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 74821141673352370, guid: 4ccd72bcb2aad42cf8ec3841ac942e29, type: 3}
   shootPoint: {x: 0, y: 0.2, z: 0.4}
-  shootCount: 2
-  shootSpreadRange: 10
-  shootCooltime: 0.1
+  shootCount: 3
+  shootSpreadRange: 6
+  shootCooltime: 0.05
   reloadCount: 12
   reloadTime: 0.5

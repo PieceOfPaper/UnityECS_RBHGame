@@ -15,7 +15,7 @@ public partial struct ECSCharacterSystem : ISystem
         public EntityCommandBuffer.ParallelWriter ecb;
         public float deltaTime;
         
-        private void Execute([ChunkIndexInQuery] int sortKey, in Entity refEntity, ref ECSCharacterData refCharacterData)
+        private void Execute([ChunkIndexInQuery] int sortKey, in Entity refEntity, ref ECSCharacterData refCharacterData, in LocalTransform refTransform)
         {
             if (refCharacterData.damagedTimer > 0f)
             {
@@ -24,6 +24,17 @@ public partial struct ECSCharacterSystem : ISystem
             
             if (refCharacterData.isDead == true)
             {
+                if (refCharacterData.deadEffect != Entity.Null)
+                {
+                    var deadEffectEntity = ecb.Instantiate(sortKey, refCharacterData.deadEffect);
+                    var deadEffectTransform = new LocalTransform()
+                    {
+                        Position = refTransform.Position,
+                        Rotation = refTransform.Rotation,
+                        Scale = refTransform.Scale,
+                    };
+                    ecb.SetComponent(sortKey, deadEffectEntity, deadEffectTransform);
+                }
                 ecb.DestroyEntity(sortKey, refEntity);
             }
         }

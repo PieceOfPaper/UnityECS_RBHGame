@@ -135,10 +135,37 @@ public partial struct ECSCollisionSystem : ISystem
                         position = collisionResultData.localTransform.Position,
                         damage = collisionData.attackDamage,
                     };
-
-                    if (collisionData.type == 2)
+                    
+                    var hitPoint = math.lerp(collisionData.position, collisionResultData.localTransform.Position,collisionData.radius / (collisionData.radius + collisionResultData.characterData.radius));
+                    
+                    if (collisionData.type == 1)
+                    {
+                        if (collisionData.characterData.hitEffect != Entity.Null)
+                        {
+                            var hitEffectEntity = ecb.Instantiate(0, collisionData.characterData.hitEffect);
+                            var hitEffectTransform = new LocalTransform()
+                            {
+                                Position = hitPoint,
+                                Rotation = Quaternion.identity,
+                                Scale = 1.0f,
+                            };
+                            ecb.SetComponent(0, hitEffectEntity, hitEffectTransform);
+                        }
+                    }
+                    else if (collisionData.type == 2)
                     {
                         var collisionBulletData = collisionData.bulletData;
+                        if (collisionBulletData.hitEffect != Entity.Null)
+                        {
+                            var hitEffectEntity = ecb.Instantiate(0, collisionBulletData.hitEffect);
+                            var hitEffectTransform = new LocalTransform()
+                            {
+                                Position = hitPoint,
+                                Rotation = Quaternion.identity,
+                                Scale = 1.0f,
+                            };
+                            ecb.SetComponent(0, hitEffectEntity, hitEffectTransform);
+                        }
                         collisionBulletData.currentHitCount += 1;
                         ecb.SetComponent(0, collisionData.entity, collisionBulletData);
                     }

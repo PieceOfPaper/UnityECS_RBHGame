@@ -13,6 +13,8 @@ public class ECSBulletAuthoring : MonoBehaviour
     public float moveDistance = 10f;
     public float duration = 1.0f;
 
+    public GameObject hitEffect;
+    
     public partial class Baker : Baker<ECSBulletAuthoring>
     {
         public override void Bake(ECSBulletAuthoring authoring)
@@ -26,6 +28,7 @@ public class ECSBulletAuthoring : MonoBehaviour
                 hitCount = authoring.hitCount,
                 moveDistance = authoring.moveDistance,
                 duration = authoring.duration,
+                hitEffect = GetEntity(authoring.hitEffect, TransformUsageFlags.Dynamic),
             });
         }
     }

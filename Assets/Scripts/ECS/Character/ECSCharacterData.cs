@@ -18,9 +18,12 @@ public partial struct ECSCharacterData : IComponentData
     public float radius;
     public ECSCharacterLayer layer;
     public float damagedCooltime;
+    public Entity deadEffect;
     
     public int attackableLayer;
     public int attackDamage;
+    public Entity hitEffect;
+
 
     public float damagedTimer;
     public bool isDead;

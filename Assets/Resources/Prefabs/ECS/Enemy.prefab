@@ -47,12 +47,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b291cccc30e2d4edd9652b3e7e2527d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 20
+  hp: 100
   radius: 0.32
   layer: 2
   damagedCooltime: 0
+  deadEffect: {fileID: 2543034709498849684, guid: aa66a0ff3b6ce4d4c925eeb28c6e19e7,
+    type: 3}
   attackableLayer: 2
   attackDamage: 1
+  hitEffect: {fileID: 8063442595298788718, guid: 5b60f417e43524f86b8169a88d1d835a,
+    type: 3}
 --- !u!114 &3405870511010612620
 MonoBehaviour:
   m_ObjectHideFlags: 0

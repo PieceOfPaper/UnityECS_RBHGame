@@ -10,9 +10,11 @@ public class ECSCharacterAuthoring : MonoBehaviour
      public float radius = 1.0f;
      public ECSCharacterLayer layer;
      public float damagedCooltime = 0f;
+     public GameObject deadEffect;
     
      public int attackableLayer = 0;
      public int attackDamage = 0;
+     public GameObject hitEffect;
      
      public class Baker : Baker<ECSCharacterAuthoring>
      {
@@ -26,9 +28,11 @@ public class ECSCharacterAuthoring : MonoBehaviour
                     radius = authoring.radius,
                     layer = authoring.layer,
                     damagedCooltime = authoring.damagedCooltime,
+                    deadEffect = GetEntity(authoring.deadEffect, TransformUsageFlags.Dynamic),
                     attackableLayer = authoring.attackableLayer,
                     attackDamage = authoring.attackDamage,
                     damagedTimer = authoring.damagedCooltime,
+                    hitEffect = GetEntity(authoring.hitEffect, TransformUsageFlags.Dynamic),
                });
           }
      }

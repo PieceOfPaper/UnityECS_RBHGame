@@ -24,6 +24,7 @@ public class ECSCharacterAuthoringInspector : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("radius"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("layer"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("damagedCooltime"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("deadEffect"));
         if (targets.Length == 1)
         {
             var script = target as ECSCharacterAuthoring;
@@ -36,6 +37,7 @@ public class ECSCharacterAuthoringInspector : Editor
         }
         EditorGUILayout.PropertyField(serializedObject.FindProperty("attackableLayer"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("attackDamage"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("hitEffect"));
         
         if (serializedObject.hasModifiedProperties)
         {
