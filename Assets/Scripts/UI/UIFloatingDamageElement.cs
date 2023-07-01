@@ -33,7 +33,22 @@ public class UIFloatingDamageElement : MonoBehaviour
     public void PlayFloating(ECSFloatingDamageData data)
     {
         Data = data;
-        if (m_TextDamage != null) m_TextDamage.text = data.damage.ToString();
+        if (m_TextDamage != null)
+        {
+            m_TextDamage.text = data.damage.ToString();
+            switch (data.layer)
+            {
+                case ECSCharacterLayer.Player:
+                    m_TextDamage.color = Color.red;
+                    break;
+                case ECSCharacterLayer.Enemy:
+                    m_TextDamage.color = Color.white;
+                    break;
+                default:
+                    m_TextDamage.color = Color.black;
+                    break;
+            }
+        }
         
         gameObject.SetActive(true);
     }

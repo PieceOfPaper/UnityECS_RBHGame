@@ -15,8 +15,13 @@ public partial struct ECSCharacterSystem : ISystem
         public EntityCommandBuffer.ParallelWriter ecb;
         public float deltaTime;
         
-        private void Execute([ChunkIndexInQuery] int sortKey, in Entity refEntity, in ECSCharacterData refCharacterData)
+        private void Execute([ChunkIndexInQuery] int sortKey, in Entity refEntity, ref ECSCharacterData refCharacterData)
         {
+            if (refCharacterData.damagedTimer > 0f)
+            {
+                refCharacterData.damagedTimer = math.max(0f, refCharacterData.damagedTimer - deltaTime);
+            }
+            
             if (refCharacterData.isDead == true)
             {
                 ecb.DestroyEntity(sortKey, refEntity);

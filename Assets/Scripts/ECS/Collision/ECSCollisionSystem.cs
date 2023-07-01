@@ -118,19 +118,13 @@ public partial struct ECSCollisionSystem : ISystem
                 var characterData = collisionResultData.characterData;
                 var collisionData = collisionResultData.collisionData;
 
-                if (characterData.damagedTimer > 0f)
-                {
-                    characterData.damagedTimer = math.max(0f, characterData.damagedTimer - deltaTime);
-                    ecb.SetComponent(collisionResultData.sortKey, collisionResultData.entity, characterData);
-                }
-                
                 if (collisionResultData.isCollision == false) continue;
 
                 var characterLayer = (int)characterData.layer;
                 if (characterData.hp > 0 && characterData.damagedTimer <= 0f && (collisionData.attackableLayer & (1 << characterLayer)) > 0)
                 {
                     characterData.hp = math.max(0, characterData.hp - collisionData.attackDamage);
-                    characterData.damagedTimer += characterData.damagedCooltime;
+                    characterData.damagedTimer = characterData.damagedCooltime;
                     if (characterData.hp == 0)
                         characterData.isDead = true;
                     ecb.SetComponent(collisionResultData.sortKey, collisionResultData.entity, characterData);
