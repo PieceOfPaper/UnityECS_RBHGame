@@ -10,7 +10,7 @@ using UnityEngine;
 public partial struct ECSSimpleAISystem : ISystem
 {
     [BurstCompile]
-    public partial struct SimpleAIJob : IJobEntity
+    public partial struct SimpleAIMoveJob : IJobEntity
     {
         public bool foundPlayer;
         public LocalTransform playerTransform;
@@ -38,6 +38,17 @@ public partial struct ECSSimpleAISystem : ISystem
         }
     }
     
+    [BurstCompile]
+    public partial struct SimpleAIShootJob : IJobEntity
+    {
+        private void Execute(in ECSSimpleAIData refAIData, ref ECSShootableData refShootableData)
+        {
+            var shootableData = refShootableData;
+            shootableData.pressShoot = true;
+            refShootableData = shootableData;
+        }
+    }
+    
     public void OnUpdate(ref SystemState state)
     {
         bool foundPlayer = false;
@@ -49,10 +60,15 @@ public partial struct ECSSimpleAISystem : ISystem
             break;
         }
 
-        new SimpleAIJob()
+        var simpleAIMoveJobHandle = new SimpleAIMoveJob()
         {
             foundPlayer = foundPlayer,
             playerTransform = playerTransform,
-        }.ScheduleParallel();
+        };
+        state.Dependency = simpleAIMoveJobHandle.ScheduleParallel(state.Dependency);
+        var simpleAIShootJobHandle = new SimpleAIShootJob()
+        {
+        };
+        state.Dependency = simpleAIShootJobHandle.ScheduleParallel(state.Dependency);
     }
 }

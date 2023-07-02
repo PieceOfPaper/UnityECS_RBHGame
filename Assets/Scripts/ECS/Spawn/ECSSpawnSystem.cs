@@ -15,7 +15,7 @@ public partial struct ECSSpawnSystem : ISystem
     {
     }
 
-    [BurstCompile]
+    // [BurstCompile]
     private partial struct SpawnJob : IJobEntity
     {
         public EntityCommandBuffer.ParallelWriter ecb;
@@ -53,7 +53,7 @@ public partial struct ECSSpawnSystem : ISystem
             
             bool isFound = false;
             Entity foundEntity = default;
-            var randRate = random.NextInt();
+            var randRate = random.NextInt() % rateSum + 1;
             var currentRate = 0;
             currentRate += spawnData.EntityData1.rate;
             if (isFound == false && currentRate >= randRate)

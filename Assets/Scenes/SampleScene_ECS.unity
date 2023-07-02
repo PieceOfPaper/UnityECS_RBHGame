@@ -656,7 +656,9 @@ MonoBehaviour:
   delay: 1
   spawnEntityDatas:
   - prefab: {fileID: 74821141673352370, guid: e0b08ad274f324ad580ebc9a8013d2d1, type: 3}
-    rate: 100
+    rate: 90
+  - prefab: {fileID: 74821141673352370, guid: 963e0a5e1b9c549ee8a8a41088d5cecf, type: 3}
+    rate: 10
   spawnDelay: 0.5
   spawnCount: 9999
   rangeType: 0
