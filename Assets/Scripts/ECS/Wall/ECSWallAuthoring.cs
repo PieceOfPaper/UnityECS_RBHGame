@@ -78,11 +78,13 @@ public class ECSWallAuthoring : MonoBehaviour
                     circleMesh.vertices = vertexList.ToArray();
                     circleMesh.normals = normalList.ToArray();
                     circleMesh.triangles = triangleList.ToArray();
+                    Gizmos.DrawWireMesh(circleMesh, Vector3.down * 1.0f, Quaternion.identity);
                     Gizmos.DrawWireMesh(circleMesh, Vector3.zero, Quaternion.identity);
+                    Gizmos.DrawWireMesh(circleMesh, Vector3.up * 1.0f, Quaternion.identity);
                 }
                 break;
             case ECSRangeType.Box:
-                Gizmos.DrawWireCube(Vector3.zero, new Vector3(rangeArg1, 0.0f, rangeArg2));
+                Gizmos.DrawWireCube(Vector3.zero, new Vector3(rangeArg1, 2.0f, rangeArg2));
                 break;
         }
     }
