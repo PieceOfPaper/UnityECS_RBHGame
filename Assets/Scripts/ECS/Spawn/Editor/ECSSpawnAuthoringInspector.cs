@@ -19,7 +19,7 @@ public class ECSSpawnAuthoringInspector : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("spawnDelay"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("spawnCount"));
 
-        ECSSpawnRangeType[] prevRangeTypes = new ECSSpawnRangeType[targets.Length];
+        ECSRangeType[] prevRangeTypes = new ECSRangeType[targets.Length];
         for (int i = 0; i < targets.Length; i ++)
         {
             if (targets[i] is ECSSpawnAuthoring authoring)
@@ -40,11 +40,11 @@ public class ECSSpawnAuthoringInspector : Editor
                 {
                     switch (authoring.rangeType)
                     {
-                        case ECSSpawnRangeType.Circle:
+                        case ECSRangeType.Circle:
                             authoring.rangeArg1 = 0.5f;
                             authoring.rangeArg2 = 360.0f;
                             break;
-                        case ECSSpawnRangeType.Box:
+                        case ECSRangeType.Box:
                             authoring.rangeArg1 = 1.0f;
                             authoring.rangeArg2 = 1.0f;
                             break;

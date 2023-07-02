@@ -80,7 +80,7 @@ public partial struct ECSSpawnSystem : ISystem
                 quaternion rot = quaternion.identity;
                 switch (spawnData.rangeType)
                 {
-                    case ECSSpawnRangeType.Circle:
+                    case ECSRangeType.Circle:
                         {
                             var eulerAngle = refTransform.Rotation.ToEuler();
                             var radiusRand = random.NextFloat();
@@ -89,7 +89,7 @@ public partial struct ECSSpawnSystem : ISystem
                             pos += math.mul(Quaternion.Euler(0f, eulerAngle.y * Mathf.Rad2Deg + rangeAngle, 0f), new float3(0f, 0f, radius));
                         }
                         break;
-                    case ECSSpawnRangeType.Box:
+                    case ECSRangeType.Box:
                         {
                             pos += math.mul(refTransform.Rotation, new float3(random.NextFloat() * spawnData.rangeArg1, 0f, random.NextFloat() * spawnData.rangeArg2));
                         }

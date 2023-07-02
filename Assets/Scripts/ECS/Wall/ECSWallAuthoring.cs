@@ -1,64 +1,24 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEngine;
 
-public class ECSSpawnAuthoring : MonoBehaviour
+public class ECSWallAuthoring : MonoBehaviour
 {
-    public bool isEnable = true;
-    public int spawnID = 0;
-    public float delay = 1.0f;
-    
-    public EntityData[] spawnEntityDatas;
-    public float spawnDelay = 0.5f;
-    public int spawnCount = 1;
-
     public ECSRangeType rangeType = ECSRangeType.Circle;
     public float rangeArg1 = 1.0f;
     public float rangeArg2 = 360.0f;
-
-    [System.Serializable]
-    public struct EntityData
-    {
-        public GameObject prefab;
-        public int rate;
-    }
     
-    public class Baker : Baker<ECSSpawnAuthoring>
+    public class Baker : Baker<ECSWallAuthoring>
     {
-        public override void Bake(ECSSpawnAuthoring authoring)
+        public override void Bake(ECSWallAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new ECSSpawnData()
+            AddComponent(entity, new ECSWallData()
             {
-                isEnable = authoring.isEnable,
-                spawnID = authoring.spawnID,
-                delay = authoring.delay,
-                EntityData1 = authoring.spawnEntityDatas != null && authoring.spawnEntityDatas.Length > 0 ? new ECSSpawnData.EntityData()
-                {
-                    entity = GetEntity(authoring.spawnEntityDatas[0].prefab, TransformUsageFlags.Dynamic),
-                    rate = authoring.spawnEntityDatas[0].rate,
-                } : default,
-                EntityData2 = authoring.spawnEntityDatas != null && authoring.spawnEntityDatas.Length > 1 ? new ECSSpawnData.EntityData()
-                {
-                    entity = GetEntity(authoring.spawnEntityDatas[1].prefab, TransformUsageFlags.Dynamic),
-                    rate = authoring.spawnEntityDatas[1].rate,
-                } : default,
-                EntityData3 = authoring.spawnEntityDatas != null && authoring.spawnEntityDatas.Length > 2 ? new ECSSpawnData.EntityData()
-                {
-                    entity = GetEntity(authoring.spawnEntityDatas[2].prefab, TransformUsageFlags.Dynamic),
-                    rate = authoring.spawnEntityDatas[0].rate,
-                } : default,
-                spawnDelay = authoring.spawnDelay,
-                spawnCount = authoring.spawnCount,
                 rangeType = authoring.rangeType,
                 rangeArg1 = authoring.rangeArg1,
                 rangeArg2 = authoring.rangeArg2,
-                delayTimer = authoring.delay,
-                random = new Unity.Mathematics.Random((uint)System.DateTime.Now.Millisecond),
             });
             
             
@@ -70,7 +30,7 @@ public class ECSSpawnAuthoring : MonoBehaviour
     {
         Gizmos.matrix = transform.localToWorldMatrix;
 
-        Gizmos.color = new Color(1.0f, 0.0f, 0.0f, 0.5f);
+        Gizmos.color = new Color(0.0f, 1.0f, 0.0f, 1.0f);
         switch (rangeType)
         {
             case ECSRangeType.Circle:
@@ -118,11 +78,11 @@ public class ECSSpawnAuthoring : MonoBehaviour
                     circleMesh.vertices = vertexList.ToArray();
                     circleMesh.normals = normalList.ToArray();
                     circleMesh.triangles = triangleList.ToArray();
-                    Gizmos.DrawMesh(circleMesh, Vector3.zero, Quaternion.identity);
+                    Gizmos.DrawWireMesh(circleMesh, Vector3.zero, Quaternion.identity);
                 }
                 break;
             case ECSRangeType.Box:
-                Gizmos.DrawCube(Vector3.zero, new Vector3(rangeArg1, 0.0f, rangeArg2));
+                Gizmos.DrawWireCube(Vector3.zero, new Vector3(rangeArg1, 0.0f, rangeArg2));
                 break;
         }
     }

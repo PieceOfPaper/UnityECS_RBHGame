@@ -40,6 +40,108 @@ public partial struct ECSCollisionSystem : ISystem
     }
 
     [BurstCompile]
+    private partial struct CollisionWallJob : IJobEntity
+    {
+        public float deltaTime;
+        [ReadOnly] public NativeArray<ECSWallData> wallDataArray;
+        [ReadOnly] public NativeArray<LocalTransform> wallTransformArray;
+        
+        private void Execute(in ECSCharacterData refCharacterData, ref LocalTransform refTransform, in ECSMoveData refMoveData)
+        {
+            var transform = refTransform;
+            var radius = refCharacterData.radius;
+            var moveDir = refMoveData.useCustomdir ? refMoveData.customDir : math.mul(refTransform.Rotation, new float3(0f, 0f, 1f));
+
+            for (int i = 0; i < wallDataArray.Length; i ++)
+            {
+                var wallData = wallDataArray[i];
+                var wallTransform = wallTransformArray[i];
+
+                var position = transform.Position;
+                position.y = 0f;
+                
+                var wallMatrix = float4x4.TRS(wallTransform.Position, wallTransform.Rotation, wallTransform.Scale);
+                var relativePos = wallMatrix.InverseTransformPoint(position);
+                relativePos.y = 0f;
+
+                switch (wallData.rangeType)
+                {
+                    case ECSRangeType.Circle:
+                        {
+                            var distanceSqr = math.distancesq(relativePos, float3.zero);
+                            if (distanceSqr < ((wallData.rangeArg1 + radius) * (wallData.rangeArg1 + radius)))
+                            {
+                                transform.Position = wallTransform.Position + math.normalize(position - new float3(wallTransform.Position.x, 0f, wallTransform.Position.z)) * (wallData.rangeArg1 + radius);
+                            }
+                        }
+                        break;
+                    case ECSRangeType.Box:
+                        if (math.abs(relativePos.x) < (wallData.rangeArg1 * 0.5f + radius) && math.abs(relativePos.z) < (wallData.rangeArg2 * 0.5f + radius))
+                        {
+                            var corner1 = new float3(-wallData.rangeArg1 * 0.5f, 0f, -wallData.rangeArg2 * 0.5f);
+                            var corner2 = new float3(wallData.rangeArg1 * 0.5f, 0f, -wallData.rangeArg2 * 0.5f);
+                            var corner3 = new float3(-wallData.rangeArg1 * 0.5f, 0f, wallData.rangeArg2 * 0.5f);
+                            var corner4 = new float3(wallData.rangeArg1 * 0.5f, 0f, wallData.rangeArg2 * 0.5f);
+
+                            // 모서리는 원 처럼 처리하자.
+                            if (relativePos.x < corner1.x && relativePos.z < corner1.z)
+                            {
+                                var distanceSqr = math.distancesq(relativePos, corner1);
+                                if (distanceSqr < radius * radius)
+                                    relativePos = corner1 + math.normalize(relativePos - corner1) * radius;
+                            }
+                            else if (relativePos.x > corner2.x && relativePos.z < corner2.z)
+                            {
+                                var distanceSqr = math.distancesq(relativePos, corner2);
+                                if (distanceSqr < radius * radius)
+                                    relativePos = corner2 + math.normalize(relativePos - corner2) * radius;
+                            }
+                            else if (relativePos.x < corner3.x && relativePos.z > corner3.z)
+                            {
+                                var distanceSqr = math.distancesq(relativePos, corner3);
+                                if (distanceSqr < radius * radius)
+                                    relativePos = corner3 + math.normalize(relativePos - corner3) * radius;
+                            }
+                            else if (relativePos.x > corner4.x && relativePos.z > corner4.z)
+                            {
+                                var distanceSqr = math.distancesq(relativePos, corner4);
+                                if (distanceSqr < radius * radius)
+                                    relativePos = corner4 + math.normalize(relativePos - corner4) * radius;
+                            }
+                            else
+                            {
+                                if (relativePos.x < 0 && (relativePos.x + radius) > corner1.x && 
+                                    relativePos.z >= corner1.z && relativePos.z <= corner4.z)
+                                {
+                                    relativePos.x = corner1.x - radius;
+                                }
+                                else if (relativePos.x > 0 && (relativePos.x - radius) < corner4.x && 
+                                         relativePos.z >= corner1.z && relativePos.z <= corner4.z)
+                                {
+                                    relativePos.x = corner4.x + radius;
+                                }
+                                else if (relativePos.z < 0 && (relativePos.z + radius) > corner1.z && 
+                                         relativePos.x >= corner1.x && relativePos.x <= corner4.x)
+                                {
+                                    relativePos.z = corner1.z - radius;
+                                }
+                                else if (relativePos.z > 0 && (relativePos.z - radius) < corner4.z && 
+                                         relativePos.x >= corner1.x && relativePos.x <= corner4.x)
+                                {
+                                    relativePos.z = corner4.z + radius;
+                                }
+                            }
+                            transform.Position = wallMatrix.TransformPoint(relativePos);
+                        }
+                        break;
+                }
+            }
+            
+            refTransform = transform;
+        }
+    }
+
+    [BurstCompile]
     private partial struct CollisionJob : IJobEntity
     {
         public float deltaTime;
@@ -178,10 +280,17 @@ public partial struct ECSCollisionSystem : ISystem
 
     public void OnUpdate(ref SystemState state)
     {
+        var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
+        var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
+        
         var characterQuery = state.EntityManager.CreateEntityQuery(typeof(ECSCharacterData), typeof(ECSMoveData), typeof(LocalTransform));
         var characterEntityArray = characterQuery.ToEntityArray(Allocator.Temp);
         var bulletQuery = state.EntityManager.CreateEntityQuery(typeof(ECSBulletData), typeof(ECSMoveData), typeof(LocalTransform));
         var bulletEntityArray = bulletQuery.ToEntityArray(Allocator.Temp);
+
+        var wallQuery = state.EntityManager.CreateEntityQuery(typeof(ECSWallData), typeof(LocalTransform));
+        var wallDataArray = wallQuery.ToComponentDataArray<ECSWallData>(Allocator.TempJob);
+        var wallTransformArray = wallQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
 
         int characterCount = characterEntityArray.Length;
         int bulletCount = bulletEntityArray.Length;
@@ -233,6 +342,17 @@ public partial struct ECSCollisionSystem : ISystem
         bulletDataArray.Dispose();
         bulletTransformArray.Dispose();
         bulletMoveDataArray.Dispose();
+
+
+        var collisionWallJob = new CollisionWallJob()
+        {
+            deltaTime = SystemAPI.Time.DeltaTime,
+            wallDataArray = wallDataArray,
+            wallTransformArray = wallTransformArray,
+        };
+        state.Dependency = collisionWallJob.ScheduleParallel(characterQuery, state.Dependency);
+        state.Dependency = wallDataArray.Dispose(state.Dependency);
+        state.Dependency = wallTransformArray.Dispose(state.Dependency);
         
         var collisionResultDataArray = new NativeArray<CollisionResultData>(characterCount, Allocator.TempJob);
         var collisionJob = new CollisionJob()
@@ -244,8 +364,6 @@ public partial struct ECSCollisionSystem : ISystem
         state.Dependency = collisionJob.ScheduleParallel(characterQuery, state.Dependency);
         state.Dependency = collisionDataArray.Dispose(state.Dependency);
 
-        var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
-        var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
         var collisionResultJob = new CollisionResultJob()
         {
             ecb = ecb,
@@ -256,5 +374,6 @@ public partial struct ECSCollisionSystem : ISystem
         
         characterQuery.Dispose();
         bulletQuery.Dispose();
+        wallQuery.Dispose();
     }
 }

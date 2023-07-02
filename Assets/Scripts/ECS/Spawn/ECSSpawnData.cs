@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
 
-public enum ECSSpawnRangeType : byte
+public enum ECSRangeType : byte
 {
     Circle, //radius, angle
     Box, //x, z
@@ -24,7 +24,7 @@ public partial struct ECSSpawnData : IComponentData
     public float spawnDelay;
     public int spawnCount;
     
-    public ECSSpawnRangeType rangeType;
+    public ECSRangeType rangeType;
     public float rangeArg1;
     public float rangeArg2;
 
