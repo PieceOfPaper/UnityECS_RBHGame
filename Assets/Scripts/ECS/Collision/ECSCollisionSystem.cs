@@ -168,7 +168,7 @@ public partial struct ECSCollisionSystem : ISystem
                 if (collisionData.entity == refEntity) continue;
                 if (collisionData.type == 2 && collisionData.bulletData.IsWillDestroy() == true) continue;
             
-                if (math.distancesq(collisionData.position, refTransform.Position) < (myEntityRadius + collisionData.radius) * (myEntityRadius + collisionData.radius))
+                if (math.distancesq(new float2(collisionData.position.x, collisionData.position.z), new float2(refTransform.Position.x, refTransform.Position.z)) < (myEntityRadius + collisionData.radius) * (myEntityRadius + collisionData.radius))
                 {
                     //캐릭터간 충돌처리
                     if (collisionData.type == 1)

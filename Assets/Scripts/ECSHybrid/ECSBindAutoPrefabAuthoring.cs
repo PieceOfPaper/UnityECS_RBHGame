@@ -20,6 +20,10 @@ public class ECSBindAutoPrefabAuthoring : MonoBehaviour
             {
                 transform = null,
             });
+            AddComponentObject(entity, new ECSBindAnimator()
+            {
+                animator = null,
+            });
         }
     }
 }

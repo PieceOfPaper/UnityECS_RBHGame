@@ -48,6 +48,11 @@ public partial struct ECSBindPrefabSystem : ISystem
                 {
                     transform = gameObject.transform,
                 });
+                ecb.AddComponent<ECSBindAnimator>(entity);
+                ecb.SetComponent(entity, new ECSBindAnimator()
+                {
+                    animator = gameObject.GetComponent<Animator>(),
+                });
             }
             
             ecb.RemoveComponent<ECSBindPrefab>(entity);
@@ -78,6 +83,10 @@ public partial struct ECSBindPrefabSystem : ISystem
                     {
                         transform = gameObject.transform,
                     });
+                    ecb.SetComponent(entity, new ECSBindAnimator()
+                    {
+                        animator = gameObject.GetComponent<Animator>(),
+                    });
                 }
             }
             else
@@ -94,6 +103,10 @@ public partial struct ECSBindPrefabSystem : ISystem
                     ecb.SetComponent(entity, new ECSBindTransform()
                     {
                         transform = null,
+                    });
+                    ecb.SetComponent(entity, new ECSBindAnimator()
+                    {
+                        animator = null,
                     });
                 }
             }
