@@ -45,10 +45,10 @@ public partial struct ECSMoveSystem : ISystem
 
     public void OnUpdate(ref SystemState state)
     {
-        
-        new MoveJob()
+        var moveJob = new MoveJob()
         {
             deltaTime = SystemAPI.Time.DeltaTime,
-        }.ScheduleParallel();
+        };
+        state.Dependency = moveJob.ScheduleParallel(state.Dependency);
     }
 }

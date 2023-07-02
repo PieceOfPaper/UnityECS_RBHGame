@@ -14,7 +14,7 @@ public partial struct ECSShootableSystem : ISystem
         public EntityCommandBuffer.ParallelWriter ecb;
         public float deltaTime;
 
-        private void Execute(in LocalTransform refLocalTransform, ref ECSShootableData refShootableData)
+        private void Execute([ChunkIndexInQuery] int sortKey, in LocalTransform refLocalTransform, ref ECSShootableData refShootableData)
         {
             var shootableData = refShootableData;
             
@@ -31,11 +31,11 @@ public partial struct ECSShootableSystem : ISystem
                 float startAngle = -shootableData.shootSpreadRange * (shootableData.shootCount - 1) * 0.5f;
                 for (int i = 0; i < shootableData.shootCount; i ++)
                 {
-                    var bulletEntity = ecb.Instantiate(0, shootableData.bullet);
+                    var bulletEntity = ecb.Instantiate(sortKey, shootableData.bullet);
                     var bulletTransform = refLocalTransform;
                     bulletTransform = bulletTransform.RotateY((startAngle + i * shootableData.shootSpreadRange) * Mathf.Deg2Rad);
-                    bulletTransform = bulletTransform.Translate(shootableData.shootPoint);
-                    ecb.SetComponent(0, bulletEntity, bulletTransform);
+                    bulletTransform = bulletTransform.Translate(math.mul(bulletTransform.Rotation, shootableData.shootPoint));
+                    ecb.SetComponent(sortKey, bulletEntity, bulletTransform);
                 }
 
                 shootableData.remainShootCount --;

@@ -10,11 +10,9 @@ public partial struct ECSBulletData : IComponentData
     public int attackableLayer;
     public int attackDamage;
     public int hitCount;
-    public float moveDistance;
     public float duration;
     public Entity hitEffect;
     
-    public float3 startPos;
     public float currentTime;
     public int currentHitCount;
 

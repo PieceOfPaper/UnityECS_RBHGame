@@ -36,10 +36,15 @@ public class UIFloatingDamage : MonoBehaviour
     private void LateUpdate()
     {
         bool needSort = false;
-        var damageFloatingList = ECSCollisionSystem.FloatingDamageList;
-        if (damageFloatingList.IsCreated == true && damageFloatingList.IsEmpty == false)
+
+        
+        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        EntityQuery query = entityManager.CreateEntityQuery(typeof(ECSFloatingDamageData));
+        if (query.IsEmpty == false)
         {
-            for (int i = 0; i < damageFloatingList.Length; i ++)
+            var floatingDamageEntities = query.ToEntityArray(Allocator.Temp);
+            var floatingDamageDatas = query.ToComponentDataArray<ECSFloatingDamageData>(Allocator.Temp);
+            for (int i = 0; i < floatingDamageDatas.Length; i ++)
             {
                 UIFloatingDamageElement element = null;
                 if (m_QueuedElements.Count == 0)
@@ -56,11 +61,16 @@ public class UIFloatingDamage : MonoBehaviour
                 }
                 if (element == null) continue;
 
-                element.PlayFloating(damageFloatingList[i]);
+                element.PlayFloating(floatingDamageDatas[i]);
                 m_PlayedElements.Add(element);
                 needSort = true;
+                
+                entityManager.DestroyEntity(floatingDamageEntities[i]);
             }
+            floatingDamageEntities.Dispose();
+            floatingDamageDatas.Dispose();
         }
+
 
         if (m_PlayedElements.Count > 0)
         {
@@ -79,8 +89,8 @@ public class UIFloatingDamage : MonoBehaviour
             }
         }
     }
-    
-    
+
+
     public void EnqueueElement(UIFloatingDamageElement element)
     {
         element.gameObject.SetActive(false);

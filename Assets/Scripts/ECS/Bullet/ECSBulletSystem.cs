@@ -25,12 +25,6 @@ public partial struct ECSBulletSystem : ISystem
                 if (bulletData.currentHitCount >= bulletData.hitCount)
                     isDestroy = true;
             }
-            if (isDestroy == false && bulletData.moveDistance > 0f)
-            {
-                var distanceSqr = math.distancesq(bulletData.startPos, refTransform.Position);
-                if (distanceSqr >= (bulletData.moveDistance * bulletData.moveDistance))
-                    isDestroy = true;
-            }
             if (isDestroy == false && bulletData.duration > 0f)
             {
                 bulletData.currentTime += deltaTime;

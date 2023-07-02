@@ -10,7 +10,6 @@ public class ECSBulletAuthoring : MonoBehaviour
     public int attackDamage;
     
     public int hitCount = 1;
-    public float moveDistance = 10f;
     public float duration = 1.0f;
 
     public GameObject hitEffect;
@@ -26,7 +25,6 @@ public class ECSBulletAuthoring : MonoBehaviour
                 attackableLayer = authoring.attackableLayer,
                 attackDamage = authoring.attackDamage,
                 hitCount = authoring.hitCount,
-                moveDistance = authoring.moveDistance,
                 duration = authoring.duration,
                 hitEffect = GetEntity(authoring.hitEffect, TransformUsageFlags.Dynamic),
             });

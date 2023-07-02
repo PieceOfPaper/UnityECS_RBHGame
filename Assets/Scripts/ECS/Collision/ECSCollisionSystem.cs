@@ -4,23 +4,16 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Jobs.LowLevel.Unsafe;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public struct ECSFloatingDamageData
-{
-    public ECSCharacterLayer layer;
-    public float3 position;
-    public int damage;
-}
-
-[UpdateInGroup(typeof(ECSPreProcessSystemGroup))]
+[UpdateInGroup(typeof(ECSProcessSystemGroup))]
+[UpdateAfter(typeof(ECSMoveSystem))]
 public partial struct ECSCollisionSystem : ISystem
 {
-    public static NativeList<ECSFloatingDamageData> FloatingDamageList;
-
     private struct CollisionData
     {
         public byte type; //1-character, 2-bullet
@@ -108,7 +101,6 @@ public partial struct ECSCollisionSystem : ISystem
         public EntityCommandBuffer.ParallelWriter ecb;
         public float deltaTime;
         public NativeArray<CollisionResultData> collisionResultDataArray;
-        public NativeArray<ECSFloatingDamageData> floatingDamageArray;
 
         public void Execute()
         {
@@ -129,12 +121,14 @@ public partial struct ECSCollisionSystem : ISystem
                         characterData.isDead = true;
                     ecb.SetComponent(collisionResultData.sortKey, collisionResultData.entity, characterData);
                     
-                    floatingDamageArray[i] = new ECSFloatingDamageData()
+                    var newFloatingDamageEntity = ecb.CreateEntity(collisionResultData.sortKey);
+                    ecb.AddComponent<ECSFloatingDamageData>(collisionResultData.sortKey, newFloatingDamageEntity);
+                    ecb.SetComponent(collisionResultData.sortKey, newFloatingDamageEntity, new ECSFloatingDamageData()
                     {
                         layer = characterData.layer,
                         position = collisionResultData.localTransform.Position,
                         damage = collisionData.attackDamage,
-                    };
+                    });
                     
                     var hitPoint = math.lerp(collisionData.position, collisionResultData.localTransform.Position,collisionData.radius / (collisionData.radius + collisionResultData.characterData.radius));
                     
@@ -173,37 +167,17 @@ public partial struct ECSCollisionSystem : ISystem
             }
         }
     }
-    
-    [BurstCompile]
-    private partial struct FloatingDamageCopyJob : IJob
-    {
-        public NativeArray<ECSFloatingDamageData> floatingDamageArray;
-        public NativeList<ECSFloatingDamageData> floatingDamageList;
-        
-        public void Execute()
-        {
-            floatingDamageList.Clear();
-            for (int i = 0; i < floatingDamageArray.Length; i ++)
-            {
-                var floatingData = floatingDamageArray[i];
-                if (floatingData.layer == 0 && floatingData.damage == 0) continue;
-                floatingDamageList.Add(floatingData);
-            }
-        }
-    }
 
     public void OnCreate(ref SystemState state)
     {
-        FloatingDamageList = new NativeList<ECSFloatingDamageData>(Allocator.Persistent);
     }
 
     public void OnDestroy(ref SystemState state)
     {
-        FloatingDamageList.Dispose();
     }
 
     public void OnUpdate(ref SystemState state)
-    {   
+    {
         var characterQuery = state.EntityManager.CreateEntityQuery(typeof(ECSCharacterData), typeof(ECSMoveData), typeof(LocalTransform));
         var characterEntityArray = characterQuery.ToEntityArray(Allocator.Temp);
         var bulletQuery = state.EntityManager.CreateEntityQuery(typeof(ECSBulletData), typeof(ECSMoveData), typeof(LocalTransform));
@@ -272,23 +246,13 @@ public partial struct ECSCollisionSystem : ISystem
 
         var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
         var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
-        var floatingDamageArray = new NativeArray<ECSFloatingDamageData>(characterCount, Allocator.TempJob);
         var collisionResultJob = new CollisionResultJob()
         {
             ecb = ecb,
             collisionResultDataArray = collisionResultDataArray,
-            floatingDamageArray = floatingDamageArray,
         };
         state.Dependency = collisionResultJob.Schedule(state.Dependency);
         state.Dependency = collisionResultDataArray.Dispose(state.Dependency);
-        
-        var floatingDamageCopyJob = new FloatingDamageCopyJob()
-        {
-            floatingDamageArray = floatingDamageArray,
-            floatingDamageList = FloatingDamageList,
-        };
-        state.Dependency = floatingDamageCopyJob.Schedule(state.Dependency);
-        state.Dependency = floatingDamageArray.Dispose(state.Dependency);
         
         characterQuery.Dispose();
         bulletQuery.Dispose();

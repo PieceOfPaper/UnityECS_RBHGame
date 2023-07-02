@@ -33,7 +33,6 @@ public class ECSBulletAuthoringInspector : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("attackableLayer"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("attackDamage"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("hitCount"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("moveDistance"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("duration"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("hitEffect"));
         
