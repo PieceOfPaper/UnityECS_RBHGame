@@ -39,7 +39,7 @@ public class PlayerLevelDataInspector : Editor
             for (int i = 0; i < 100; i ++)
             {
                 currentExp = currentExp + i * 1;
-                currentShootCount = Mathf.Min(1 + i / 4, 12);
+                currentShootCount = Mathf.Min(1 + i / 4, 18);
                 currentShootCooltime = 0.3f * ((100f - i) / 100f);
                 currentReloadCount = 6 + i / 8;
                 currentReloadTime = 0.2f + 0.8f * ((100f - i) / 100f);
