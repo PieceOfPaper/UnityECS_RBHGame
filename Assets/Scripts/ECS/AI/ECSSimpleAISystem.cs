@@ -53,7 +53,7 @@ public partial struct ECSSimpleAISystem : ISystem
     {
         bool foundPlayer = false;
         LocalTransform playerTransform = default;
-        foreach (var (playerTag, localTransform) in SystemAPI.Query<RefRO<ECSPlayerTag>, RefRO<LocalTransform>>())
+        foreach (var (playerTag, localTransform) in SystemAPI.Query<RefRO<ECSPlayerData>, RefRO<LocalTransform>>())
         {
             foundPlayer = true;
             playerTransform = localTransform.ValueRO;

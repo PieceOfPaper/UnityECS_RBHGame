@@ -57,6 +57,7 @@ MonoBehaviour:
   attackDamage: 1
   hitEffect: {fileID: 8063442595298788718, guid: 5b60f417e43524f86b8169a88d1d835a,
     type: 3}
+  dropItem: {fileID: 74821141673352370, guid: f735dfda83f634c0e97289e58eed3397, type: 3}
 --- !u!114 &3405870511010612620
 MonoBehaviour:
   m_ObjectHideFlags: 0

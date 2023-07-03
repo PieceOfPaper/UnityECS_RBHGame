@@ -35,6 +35,17 @@ public partial struct ECSCharacterSystem : ISystem
                     };
                     ecb.SetComponent(sortKey, deadEffectEntity, deadEffectTransform);
                 }
+                if (refCharacterData.dropItem != Entity.Null)
+                {
+                    var dropItemEntity = ecb.Instantiate(sortKey, refCharacterData.dropItem);
+                    var dropItemTransform = new LocalTransform()
+                    {
+                        Position = refTransform.Position,
+                        Rotation = refTransform.Rotation,
+                        Scale = refTransform.Scale,
+                    };
+                    ecb.SetComponent(sortKey, dropItemEntity, dropItemTransform);
+                }
                 ecb.DestroyEntity(sortKey, refEntity);
             }
         }

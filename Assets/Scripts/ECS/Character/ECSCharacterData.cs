@@ -24,6 +24,8 @@ public partial struct ECSCharacterData : IComponentData
     public int attackDamage;
     public Entity hitEffect;
 
+    public Entity dropItem;
+
 
     public float damagedTimer;
     public bool isDead;

@@ -39,7 +39,7 @@ public partial struct ECSInputSystem : ISystem, InputActionMain.IPlayerActions
     public void OnUpdate(ref SystemState state)
     {
         var mainCamera = Camera.main;
-        foreach (var (playerTag, moveDataRW, shootableDataRW, localTransform) in SystemAPI.Query<RefRO<ECSPlayerTag>, RefRW<ECSMoveData>, RefRW<ECSShootableData>, RefRW<LocalTransform>>())
+        foreach (var (playerTag, moveDataRW, shootableDataRW, localTransform) in SystemAPI.Query<RefRO<ECSPlayerData>, RefRW<ECSMoveData>, RefRW<ECSShootableData>, RefRW<LocalTransform>>())
         {
             if (lookDir.sqrMagnitude > 0f)
             {

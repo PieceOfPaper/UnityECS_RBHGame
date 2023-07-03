@@ -33,7 +33,7 @@ public class CinemachineVirtualCameraPlayerFollow : MonoBehaviour
         if (m_TargetTrasnform == null)
         {
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            EntityQuery query = entityManager.CreateEntityQuery(typeof(ECSPlayerTag), typeof(ECSBindTransform));
+            EntityQuery query = entityManager.CreateEntityQuery(typeof(ECSPlayerData), typeof(ECSBindTransform));
             if (query.IsEmpty == false)
             {
                 var entity = query.GetSingletonEntity();

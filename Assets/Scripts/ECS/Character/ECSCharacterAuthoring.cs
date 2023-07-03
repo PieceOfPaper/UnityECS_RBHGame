@@ -15,6 +15,8 @@ public class ECSCharacterAuthoring : MonoBehaviour
      public int attackableLayer = 0;
      public int attackDamage = 0;
      public GameObject hitEffect;
+
+     public GameObject dropItem;
      
      public class Baker : Baker<ECSCharacterAuthoring>
      {
@@ -33,6 +35,7 @@ public class ECSCharacterAuthoring : MonoBehaviour
                     attackDamage = authoring.attackDamage,
                     damagedTimer = authoring.damagedCooltime,
                     hitEffect = GetEntity(authoring.hitEffect, TransformUsageFlags.Dynamic),
+                    dropItem = GetEntity(authoring.dropItem, TransformUsageFlags.Dynamic),
                });
           }
      }

@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEditor;
 
+[CanEditMultipleObjects]
 [CustomEditor(typeof(ECSCharacterAuthoring))]
 public class ECSCharacterAuthoringInspector : Editor
 {
@@ -38,6 +39,7 @@ public class ECSCharacterAuthoringInspector : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("attackableLayer"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("attackDamage"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("hitEffect"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("dropItem"));
         
         if (serializedObject.hasModifiedProperties)
         {
