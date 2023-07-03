@@ -1,0 +1,615 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b50eed0557b248b68f0cda6c143b269, type: 3}
+  m_Name: PlayerLevelData
+  m_EditorClassIdentifier: 
+  datas:
+  - level: 1
+    requireExp: 0
+    shootCount: 1
+    shootCooltime: 0.3
+    reloadCount: 6
+    reloadTime: 1
+  - level: 2
+    requireExp: 1
+    shootCount: 1
+    shootCooltime: 0.29700002
+    reloadCount: 6
+    reloadTime: 0.99200004
+  - level: 3
+    requireExp: 3
+    shootCount: 1
+    shootCooltime: 0.294
+    reloadCount: 6
+    reloadTime: 0.984
+  - level: 4
+    requireExp: 6
+    shootCount: 1
+    shootCooltime: 0.291
+    reloadCount: 6
+    reloadTime: 0.976
+  - level: 5
+    requireExp: 10
+    shootCount: 2
+    shootCooltime: 0.28800002
+    reloadCount: 6
+    reloadTime: 0.968
+  - level: 6
+    requireExp: 15
+    shootCount: 2
+    shootCooltime: 0.28500003
+    reloadCount: 6
+    reloadTime: 0.96000004
+  - level: 7
+    requireExp: 21
+    shootCount: 2
+    shootCooltime: 0.282
+    reloadCount: 6
+    reloadTime: 0.952
+  - level: 8
+    requireExp: 28
+    shootCount: 2
+    shootCooltime: 0.279
+    reloadCount: 6
+    reloadTime: 0.944
+  - level: 9
+    requireExp: 36
+    shootCount: 3
+    shootCooltime: 0.27600002
+    reloadCount: 7
+    reloadTime: 0.936
+  - level: 10
+    requireExp: 45
+    shootCount: 3
+    shootCooltime: 0.273
+    reloadCount: 7
+    reloadTime: 0.92800003
+  - level: 11
+    requireExp: 55
+    shootCount: 3
+    shootCooltime: 0.27
+    reloadCount: 7
+    reloadTime: 0.92
+  - level: 12
+    requireExp: 66
+    shootCount: 3
+    shootCooltime: 0.26700002
+    reloadCount: 7
+    reloadTime: 0.912
+  - level: 13
+    requireExp: 78
+    shootCount: 4
+    shootCooltime: 0.264
+    reloadCount: 7
+    reloadTime: 0.904
+  - level: 14
+    requireExp: 91
+    shootCount: 4
+    shootCooltime: 0.261
+    reloadCount: 7
+    reloadTime: 0.896
+  - level: 15
+    requireExp: 105
+    shootCount: 4
+    shootCooltime: 0.25800002
+    reloadCount: 7
+    reloadTime: 0.888
+  - level: 16
+    requireExp: 120
+    shootCount: 4
+    shootCooltime: 0.255
+    reloadCount: 7
+    reloadTime: 0.88
+  - level: 17
+    requireExp: 136
+    shootCount: 5
+    shootCooltime: 0.252
+    reloadCount: 8
+    reloadTime: 0.87200004
+  - level: 18
+    requireExp: 153
+    shootCount: 5
+    shootCooltime: 0.24900001
+    reloadCount: 8
+    reloadTime: 0.864
+  - level: 19
+    requireExp: 171
+    shootCount: 5
+    shootCooltime: 0.246
+    reloadCount: 8
+    reloadTime: 0.856
+  - level: 20
+    requireExp: 190
+    shootCount: 5
+    shootCooltime: 0.24300002
+    reloadCount: 8
+    reloadTime: 0.848
+  - level: 21
+    requireExp: 210
+    shootCount: 6
+    shootCooltime: 0.24000001
+    reloadCount: 8
+    reloadTime: 0.84000003
+  - level: 22
+    requireExp: 231
+    shootCount: 6
+    shootCooltime: 0.237
+    reloadCount: 8
+    reloadTime: 0.832
+  - level: 23
+    requireExp: 253
+    shootCount: 6
+    shootCooltime: 0.23400001
+    reloadCount: 8
+    reloadTime: 0.824
+  - level: 24
+    requireExp: 276
+    shootCount: 6
+    shootCooltime: 0.231
+    reloadCount: 8
+    reloadTime: 0.816
+  - level: 25
+    requireExp: 300
+    shootCount: 7
+    shootCooltime: 0.22800002
+    reloadCount: 9
+    reloadTime: 0.808
+  - level: 26
+    requireExp: 325
+    shootCount: 7
+    shootCooltime: 0.22500001
+    reloadCount: 9
+    reloadTime: 0.8
+  - level: 27
+    requireExp: 351
+    shootCount: 7
+    shootCooltime: 0.222
+    reloadCount: 9
+    reloadTime: 0.792
+  - level: 28
+    requireExp: 378
+    shootCount: 7
+    shootCooltime: 0.21900001
+    reloadCount: 9
+    reloadTime: 0.78400004
+  - level: 29
+    requireExp: 406
+    shootCount: 8
+    shootCooltime: 0.216
+    reloadCount: 9
+    reloadTime: 0.776
+  - level: 30
+    requireExp: 435
+    shootCount: 8
+    shootCooltime: 0.21300001
+    reloadCount: 9
+    reloadTime: 0.768
+  - level: 31
+    requireExp: 465
+    shootCount: 8
+    shootCooltime: 0.21000001
+    reloadCount: 9
+    reloadTime: 0.76
+  - level: 32
+    requireExp: 496
+    shootCount: 8
+    shootCooltime: 0.207
+    reloadCount: 9
+    reloadTime: 0.75200003
+  - level: 33
+    requireExp: 528
+    shootCount: 9
+    shootCooltime: 0.20400001
+    reloadCount: 10
+    reloadTime: 0.744
+  - level: 34
+    requireExp: 561
+    shootCount: 9
+    shootCooltime: 0.201
+    reloadCount: 10
+    reloadTime: 0.736
+  - level: 35
+    requireExp: 595
+    shootCount: 9
+    shootCooltime: 0.19800001
+    reloadCount: 10
+    reloadTime: 0.728
+  - level: 36
+    requireExp: 630
+    shootCount: 9
+    shootCooltime: 0.19500001
+    reloadCount: 10
+    reloadTime: 0.72
+  - level: 37
+    requireExp: 666
+    shootCount: 10
+    shootCooltime: 0.192
+    reloadCount: 10
+    reloadTime: 0.712
+  - level: 38
+    requireExp: 703
+    shootCount: 10
+    shootCooltime: 0.18900001
+    reloadCount: 10
+    reloadTime: 0.704
+  - level: 39
+    requireExp: 741
+    shootCount: 10
+    shootCooltime: 0.186
+    reloadCount: 10
+    reloadTime: 0.69600004
+  - level: 40
+    requireExp: 780
+    shootCount: 10
+    shootCooltime: 0.18300001
+    reloadCount: 10
+    reloadTime: 0.688
+  - level: 41
+    requireExp: 820
+    shootCount: 11
+    shootCooltime: 0.18
+    reloadCount: 11
+    reloadTime: 0.68
+  - level: 42
+    requireExp: 861
+    shootCount: 11
+    shootCooltime: 0.177
+    reloadCount: 11
+    reloadTime: 0.672
+  - level: 43
+    requireExp: 903
+    shootCount: 11
+    shootCooltime: 0.17400001
+    reloadCount: 11
+    reloadTime: 0.66400003
+  - level: 44
+    requireExp: 946
+    shootCount: 11
+    shootCooltime: 0.171
+    reloadCount: 11
+    reloadTime: 0.656
+  - level: 45
+    requireExp: 990
+    shootCount: 12
+    shootCooltime: 0.16800001
+    reloadCount: 11
+    reloadTime: 0.648
+  - level: 46
+    requireExp: 1035
+    shootCount: 12
+    shootCooltime: 0.165
+    reloadCount: 11
+    reloadTime: 0.64
+  - level: 47
+    requireExp: 1081
+    shootCount: 12
+    shootCooltime: 0.162
+    reloadCount: 11
+    reloadTime: 0.632
+  - level: 48
+    requireExp: 1128
+    shootCount: 12
+    shootCooltime: 0.15900001
+    reloadCount: 11
+    reloadTime: 0.624
+  - level: 49
+    requireExp: 1176
+    shootCount: 12
+    shootCooltime: 0.156
+    reloadCount: 12
+    reloadTime: 0.616
+  - level: 50
+    requireExp: 1225
+    shootCount: 12
+    shootCooltime: 0.15300001
+    reloadCount: 12
+    reloadTime: 0.608
+  - level: 51
+    requireExp: 1275
+    shootCount: 12
+    shootCooltime: 0.15
+    reloadCount: 12
+    reloadTime: 0.6
+  - level: 52
+    requireExp: 1326
+    shootCount: 12
+    shootCooltime: 0.147
+    reloadCount: 12
+    reloadTime: 0.592
+  - level: 53
+    requireExp: 1378
+    shootCount: 12
+    shootCooltime: 0.14400001
+    reloadCount: 12
+    reloadTime: 0.584
+  - level: 54
+    requireExp: 1431
+    shootCount: 12
+    shootCooltime: 0.141
+    reloadCount: 12
+    reloadTime: 0.57600003
+  - level: 55
+    requireExp: 1485
+    shootCount: 12
+    shootCooltime: 0.13800001
+    reloadCount: 12
+    reloadTime: 0.568
+  - level: 56
+    requireExp: 1540
+    shootCount: 12
+    shootCooltime: 0.135
+    reloadCount: 12
+    reloadTime: 0.56
+  - level: 57
+    requireExp: 1596
+    shootCount: 12
+    shootCooltime: 0.132
+    reloadCount: 13
+    reloadTime: 0.552
+  - level: 58
+    requireExp: 1653
+    shootCount: 12
+    shootCooltime: 0.12900001
+    reloadCount: 13
+    reloadTime: 0.544
+  - level: 59
+    requireExp: 1711
+    shootCount: 12
+    shootCooltime: 0.126
+    reloadCount: 13
+    reloadTime: 0.536
+  - level: 60
+    requireExp: 1770
+    shootCount: 12
+    shootCooltime: 0.123
+    reloadCount: 13
+    reloadTime: 0.528
+  - level: 61
+    requireExp: 1830
+    shootCount: 12
+    shootCooltime: 0.120000005
+    reloadCount: 13
+    reloadTime: 0.52
+  - level: 62
+    requireExp: 1891
+    shootCount: 12
+    shootCooltime: 0.117000006
+    reloadCount: 13
+    reloadTime: 0.512
+  - level: 63
+    requireExp: 1953
+    shootCount: 12
+    shootCooltime: 0.11400001
+    reloadCount: 13
+    reloadTime: 0.504
+  - level: 64
+    requireExp: 2016
+    shootCount: 12
+    shootCooltime: 0.111
+    reloadCount: 13
+    reloadTime: 0.49600002
+  - level: 65
+    requireExp: 2080
+    shootCount: 12
+    shootCooltime: 0.108
+    reloadCount: 14
+    reloadTime: 0.488
+  - level: 66
+    requireExp: 2145
+    shootCount: 12
+    shootCooltime: 0.105000004
+    reloadCount: 14
+    reloadTime: 0.48000002
+  - level: 67
+    requireExp: 2211
+    shootCount: 12
+    shootCooltime: 0.102000006
+    reloadCount: 14
+    reloadTime: 0.472
+  - level: 68
+    requireExp: 2278
+    shootCount: 12
+    shootCooltime: 0.09900001
+    reloadCount: 14
+    reloadTime: 0.46400002
+  - level: 69
+    requireExp: 2346
+    shootCount: 12
+    shootCooltime: 0.096
+    reloadCount: 14
+    reloadTime: 0.456
+  - level: 70
+    requireExp: 2415
+    shootCount: 12
+    shootCooltime: 0.093
+    reloadCount: 14
+    reloadTime: 0.448
+  - level: 71
+    requireExp: 2485
+    shootCount: 12
+    shootCooltime: 0.09
+    reloadCount: 14
+    reloadTime: 0.44
+  - level: 72
+    requireExp: 2556
+    shootCount: 12
+    shootCooltime: 0.087000005
+    reloadCount: 14
+    reloadTime: 0.432
+  - level: 73
+    requireExp: 2628
+    shootCount: 12
+    shootCooltime: 0.08400001
+    reloadCount: 15
+    reloadTime: 0.424
+  - level: 74
+    requireExp: 2701
+    shootCount: 12
+    shootCooltime: 0.081
+    reloadCount: 15
+    reloadTime: 0.416
+  - level: 75
+    requireExp: 2775
+    shootCount: 12
+    shootCooltime: 0.078
+    reloadCount: 15
+    reloadTime: 0.408
+  - level: 76
+    requireExp: 2850
+    shootCount: 12
+    shootCooltime: 0.075
+    reloadCount: 15
+    reloadTime: 0.4
+  - level: 77
+    requireExp: 2926
+    shootCount: 12
+    shootCooltime: 0.072000004
+    reloadCount: 15
+    reloadTime: 0.39200002
+  - level: 78
+    requireExp: 3003
+    shootCount: 12
+    shootCooltime: 0.069000006
+    reloadCount: 15
+    reloadTime: 0.384
+  - level: 79
+    requireExp: 3081
+    shootCount: 12
+    shootCooltime: 0.066
+    reloadCount: 15
+    reloadTime: 0.37600002
+  - level: 80
+    requireExp: 3160
+    shootCount: 12
+    shootCooltime: 0.063
+    reloadCount: 15
+    reloadTime: 0.368
+  - level: 81
+    requireExp: 3240
+    shootCount: 12
+    shootCooltime: 0.060000002
+    reloadCount: 16
+    reloadTime: 0.36
+  - level: 82
+    requireExp: 3321
+    shootCount: 12
+    shootCooltime: 0.057000004
+    reloadCount: 16
+    reloadTime: 0.352
+  - level: 83
+    requireExp: 3403
+    shootCount: 12
+    shootCooltime: 0.054
+    reloadCount: 16
+    reloadTime: 0.344
+  - level: 84
+    requireExp: 3486
+    shootCount: 12
+    shootCooltime: 0.051000003
+    reloadCount: 16
+    reloadTime: 0.336
+  - level: 85
+    requireExp: 3570
+    shootCount: 12
+    shootCooltime: 0.048
+    reloadCount: 16
+    reloadTime: 0.328
+  - level: 86
+    requireExp: 3655
+    shootCount: 12
+    shootCooltime: 0.045
+    reloadCount: 16
+    reloadTime: 0.32
+  - level: 87
+    requireExp: 3741
+    shootCount: 12
+    shootCooltime: 0.042000003
+    reloadCount: 16
+    reloadTime: 0.312
+  - level: 88
+    requireExp: 3828
+    shootCount: 12
+    shootCooltime: 0.039
+    reloadCount: 16
+    reloadTime: 0.304
+  - level: 89
+    requireExp: 3916
+    shootCount: 12
+    shootCooltime: 0.036000002
+    reloadCount: 17
+    reloadTime: 0.296
+  - level: 90
+    requireExp: 4005
+    shootCount: 12
+    shootCooltime: 0.033
+    reloadCount: 17
+    reloadTime: 0.28800002
+  - level: 91
+    requireExp: 4095
+    shootCount: 12
+    shootCooltime: 0.030000001
+    reloadCount: 17
+    reloadTime: 0.28
+  - level: 92
+    requireExp: 4186
+    shootCount: 12
+    shootCooltime: 0.027
+    reloadCount: 17
+    reloadTime: 0.272
+  - level: 93
+    requireExp: 4278
+    shootCount: 12
+    shootCooltime: 0.024
+    reloadCount: 17
+    reloadTime: 0.264
+  - level: 94
+    requireExp: 4371
+    shootCount: 12
+    shootCooltime: 0.021000002
+    reloadCount: 17
+    reloadTime: 0.256
+  - level: 95
+    requireExp: 4465
+    shootCount: 12
+    shootCooltime: 0.018000001
+    reloadCount: 17
+    reloadTime: 0.24800001
+  - level: 96
+    requireExp: 4560
+    shootCount: 12
+    shootCooltime: 0.015000001
+    reloadCount: 17
+    reloadTime: 0.24000001
+  - level: 97
+    requireExp: 4656
+    shootCount: 12
+    shootCooltime: 0.012
+    reloadCount: 18
+    reloadTime: 0.23200001
+  - level: 98
+    requireExp: 4753
+    shootCount: 12
+    shootCooltime: 0.009000001
+    reloadCount: 18
+    reloadTime: 0.224
+  - level: 99
+    requireExp: 4851
+    shootCount: 12
+    shootCooltime: 0.006
+    reloadCount: 18
+    reloadTime: 0.216
+  - level: 100
+    requireExp: 4950
+    shootCount: 12
+    shootCooltime: 0.003
+    reloadCount: 18
+    reloadTime: 0.208

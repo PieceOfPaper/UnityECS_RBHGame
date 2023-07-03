@@ -16,7 +16,6 @@ public class ECSPlayerAuthoring : MonoBehaviour
             AddComponent(entity, new ECSPlayerData()
             {
                 expGatherRadius = authoring.expGatherRadius,
-                level = 1,
                 exp = 0,
             });
         }

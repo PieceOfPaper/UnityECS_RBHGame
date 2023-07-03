@@ -7,6 +7,5 @@ public partial struct ECSPlayerData : IComponentData
 {
     public float expGatherRadius;
     
-    public int level;
     public int exp;
 }
