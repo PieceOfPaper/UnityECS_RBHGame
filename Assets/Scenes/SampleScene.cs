@@ -37,6 +37,14 @@ public class SampleScene : MonoBehaviour
         resultUI.SetActive(false);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+
     private void LateUpdate()
     {
         var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
