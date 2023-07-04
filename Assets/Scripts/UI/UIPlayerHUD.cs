@@ -49,23 +49,23 @@ public class UIPlayerHUD : MonoBehaviour
     private void LateUpdate()
     {
         var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        var query = entityManager.CreateEntityQuery(typeof(ECSPlayerData), typeof(ECSCharacterData), typeof(ECSShootableData), typeof(LocalTransform));
+        var query = entityManager.CreateEntityQuery(typeof(ECSPlayerData), typeof(ECSCharacterData), typeof(ECSShootableData), typeof(ECSBindTransform));
         if (query.IsEmpty == false)
         {
             var entity = query.GetSingletonEntity();
             var playerData = entityManager.GetComponentData<ECSPlayerData>(entity);
             var characterData = entityManager.GetComponentData<ECSCharacterData>(entity);
             var shootableData = entityManager.GetComponentData<ECSShootableData>(entity);
-            var localTransform = entityManager.GetComponentData<LocalTransform>(entity);
+            var bindTransform = entityManager.GetComponentObject<ECSBindTransform>(entity);
 
             var levelData = m_PlayerLevelData.GetDataByExp(playerData.exp);
             var nextLevelData = m_PlayerLevelData.GetDataByLevel(levelData.level + 1);
             
             if (m_Pivot != null)
             {
-                if (Camera.main != null)
+                if (Camera.main != null && bindTransform != null && bindTransform.transform != null)
                 {
-                    var screenPoint = Camera.main.WorldToScreenPoint((Vector3)localTransform.Position + Vector3.up * m_Offset);
+                    var screenPoint = Camera.main.WorldToScreenPoint(bindTransform.transform.position + Vector3.up * m_Offset);
         
                     var localPoint = Vector2.zero;
                     if (m_Canvas == null || m_Canvas.rootCanvas.renderMode == RenderMode.ScreenSpaceOverlay)
